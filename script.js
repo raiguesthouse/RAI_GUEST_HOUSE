@@ -5,7 +5,7 @@ let cart = [];
 async function displayMenu() {
     console.log('Starting to fetch menu...');
     try {
-        const response = await fetch('https://cors-anywhere.herokuapp.com/https://script.google.com/macros/s/AKfycbyn5D-4VHShkibvWO7npc_vTeDJQAl5McDyAn-py0eXbpab7kl45RtWxKjt_sE2Fy-a/exec', {
+        const response = await fetch('https://rai-guest-house-proxy.vercel.app/menu', {
             method: 'GET',
         });
         console.log('Response status:', response.status);
@@ -128,7 +128,7 @@ async function submitOrder() {
     const orderData = { cart, total, roomNumber, mobileNumber }; // Include room number and mobile number in the order data
 
     try {
-        const response = await fetch('https://cors-anywhere.herokuapp.com/https://script.google.com/macros/s/AKfycbzUqoV3WAIYybOFvrRULiTfIrEuSizP8NU0jOOz-XNuGdWnZNvojCf5c2b9CQaw90ET/exec', {
+        const response = await fetch('https://rai-guest-house-proxy.vercel.app/submit-order', {
             method: 'POST',
             body: JSON.stringify(orderData),
             headers: {
