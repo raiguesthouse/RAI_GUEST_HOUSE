@@ -1,44 +1,46 @@
+// Required modules import karo Vercel proxy server ke liye.
 const express = require('express');
 const axios = require('axios');
 const app = express();
 
-// Enable CORS for all routes
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    next();
-});
-
+// Middleware to parse JSON bodies for POST requests.
 app.use(express.json());
 
-// Proxy for menu fetch (GET request)
+// Yeh endpoint menu fetch karta hai Apps Script ke /menu endpoint se.
+// Yeh website aur Apps Script ke beech proxy ka kaam karta hai taaki CORS aur security issues na ho.
+// Agar Apps Script ko redeploy karte ho aur naya deployment ID milta hai, to neeche wala URL change kar do.
 app.get('/menu', async (req, res) => {
     try {
-        const response = await axios.get('https://script.google.com/macros/s/AKfycbyOk4RILEo1pK6Xk2PhJs1n56CPcBuN6ch_Zs29LOElT3KhInfxP8bi055oeBb83RIy/exec');
+        // Apps Script se menu data fetch karo.
+        // Agar Apps Script ka deployment URL change hota hai, to yeh URL update kar do.
+        const response = await axios.get('https://script.google.com/macros/s/AKfycbzBw3rZmqWMprjY_-4CsVod9V9J1V-toa83dkJ3jNq6uU2sztc7XZb7YgLCWjR2dM9G/exec/exec');
         res.json(response.data);
     } catch (error) {
+        // Koi error aaye to log karo aur error response website ko bhejo.
         console.error('Error fetching menu:', error.message);
         res.status(500).json({ status: 'error', message: error.message });
     }
 });
 
-// Proxy for order submission (POST request)
+// Yeh endpoint order submit karta hai Apps Script ke /submit-order endpoint pe.
+// Yeh order data (cart, total, roomNumber, mobileNumber) ko Apps Script ko bhejta hai recording ke liye.
+// Agar Apps Script ko redeploy karte ho aur naya deployment ID milta hai, to neeche wala URL change kar do.
 app.post('/submit-order', async (req, res) => {
     try {
-        const response = await axios.post('https://script.google.com/macros/s/AKfycby1CelOOr1BpO_B1paPdAncxhKamzFzNrU_lCK-6-igGsGF-wd2mcOoRfn4P7O9VNau/exec', req.body, {
+        // Order data ko Apps Script ko bhejo.
+        // Agar Apps Script ka deployment URL change hota hai, to yeh URL update kar do.
+        const response = await axios.post('https://script.google.com/macros/s/<new-deployment-id>/exec', req.body, {
             headers: {
                 'Content-Type': 'application/json',
             },
         });
         res.json(response.data);
     } catch (error) {
+        // Koi error aaye to log karo aur error response website ko bhejo.
         console.error('Error submitting order:', error.message);
         res.status(500).json({ status: 'error', message: error.message });
     }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Proxy server running on port ${PORT}`);
-});
+// App ko export karo taaki Vercel deploy kar sake.
+module.exports = app;
