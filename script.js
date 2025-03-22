@@ -5,7 +5,6 @@ async function displayMenu() {
     try {
         const response = await fetch('https://script.google.com/macros/s/AKfycbyn5D-4VHShkibvWO7npc_vTeDJQAl5McDyAn-py0eXbpab7kl45RtWxKjt_sE2Fy-a/exec', {
             method: 'GET',
-            // mode: 'no-cors', // Comment out no-cors to test if CORS works
         });
         console.log('Response status:', response.status);
         console.log('Response type:', response.type);
@@ -77,5 +76,40 @@ function updateCart() {
 
     cartTotal.textContent = total;
 }
+
+async function submitOrder() {
+    if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+    }
+
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const orderData = { cart, total };
+
+    try {
+        const response = await fetch('https://script.google.com/macros/s/AKfycbyA_V3yRjeUxviJgHbVtNN4AK2Kzy3-ptuZSFYYjvWufphWpp4fgrqPuifAaTB_Nh93/exec', {
+            method: 'POST',
+            body: JSON.stringify(orderData),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+
+        const result = await response.json();
+        if (result.status === 'success') {
+            alert('Order submitted successfully!');
+            cart = []; // Clear the cart
+            updateCart();
+        } else {
+            alert('Error submitting order: ' + result.message);
+        }
+    } catch (error) {
+        console.error('Error submitting order:', error.message);
+        alert('Error submitting order. Please try again later.');
+    }
+}
+
+// Add event listener for the Submit Order button
+document.getElementById('submit-order').addEventListener('click', submitOrder);
 
 window.onload = displayMenu;
