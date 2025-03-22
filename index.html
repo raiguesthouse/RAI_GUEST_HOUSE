@@ -3,30 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guest House Restaurant Menu</title>
+    <title>Rai Guest House Menu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <style>
+        body {
+            background: url('luxury-bg.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+        }
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 1.5s ease-in forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .hover-effect:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease-in-out;
+        }
+        .glow-btn:hover {
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        }
+        .fireworks {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            display: none;
+        }
         .menu-item {
-            margin: 10px 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        .cart-item {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
-    <h1>Restaurant Menu</h1>
-    <div id="menu-items"></div>
-
-    <h2>Cart</h2>
-    <ul id="cart-items"></ul>
-    <p>Total: ₹<span id="cart-total">0</span></p>
-    <div>
-        <label for="room-number">Room Number:</label>
-        <input type="text" id="room-number" placeholder="Enter your room number" required>
+    <div class="container mx-auto text-center p-6 fade-in">
+        <h1 class="text-4xl font-bold mb-6 text-yellow-400">Rai Guest House Menu</h1>
+        <div id="menu" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Dynamic menu items will be added here -->
+        </div>
+        <div class="mt-6 p-4 bg-gray-900 rounded">
+            <h2 class="text-2xl font-bold mb-2">Cart</h2>
+            <div id="cart-items" class="mb-4"></div>
+            <p id="total-price" class="mt-2 text-xl font-semibold">Total: ₹<span id="cart-total">0</span></p>
+            <div class="mt-4">
+                <label for="room-number" class="block text-left text-sm font-medium mb-1">Room Number:</label>
+                <input type="text" id="room-number" class="w-full max-w-xs p-2 rounded text-black" placeholder="Enter your room number" required>
+            </div>
+            <div class="mt-2">
+                <label for="mobile-number" class="block text-left text-sm font-medium mb-1">Mobile Number:</label>
+                <input type="tel" id="mobile-number" class="w-full max-w-xs p-2 rounded text-black" placeholder="Enter your mobile number" pattern="[0-9]{10}" required>
+            </div>
+            <button id="submit-order" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 mt-4 rounded glow-btn">Place Order</button>
+        </div>
     </div>
-    <div>
-        <label for="mobile-number">Mobile Number:</label>
-        <input type="tel" id="mobile-number" placeholder="Enter your mobile number" pattern="[0-9]{10}" required>
-    </div>
-    <button id="submit-order">Submit Order</button>
-
+    <div class="fireworks" id="fireworks"></div>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

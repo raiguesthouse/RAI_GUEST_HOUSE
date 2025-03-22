@@ -18,26 +18,25 @@ async function displayMenu() {
         const menu = await response.json();
         console.log('Menu fetched:', menu);
 
-        // Add debugging to check the menu data
         if (!Array.isArray(menu)) {
             console.error('Menu data is not an array:', menu);
-            const menuContainer = document.getElementById('menu-items');
+            const menuContainer = document.getElementById('menu');
             if (menuContainer) {
-                menuContainer.innerHTML = '<p>Error: Menu data is not in the correct format.</p>';
+                menuContainer.innerHTML = '<p class="text-red-500">Error: Menu data is not in the correct format.</p>';
             }
             return;
         }
 
         if (menu.length === 0) {
             console.warn('Menu is empty:', menu);
-            const menuContainer = document.getElementById('menu-items');
+            const menuContainer = document.getElementById('menu');
             if (menuContainer) {
-                menuContainer.innerHTML = '<p>No menu items available.</p>';
+                menuContainer.innerHTML = '<p class="text-yellow-500">No menu items available.</p>';
             }
             return;
         }
 
-        const menuContainer = document.getElementById('menu-items');
+        const menuContainer = document.getElementById('menu');
         if (!menuContainer) {
             console.error('Menu container not found!');
             return;
@@ -45,15 +44,17 @@ async function displayMenu() {
         menuContainer.innerHTML = '';
 
         menu.forEach((item, index) => {
-            console.log(`Rendering menu item ${index}:`, item); // Debug each item
+            console.log(`Rendering menu item ${index}:`, item);
             const sanitizedId = `item-${index}`;
             const div = document.createElement('div');
-            div.classList.add('menu-item');
+            div.classList.add('menu-item', 'hover-effect');
             div.innerHTML = `
-                <span>${item.name} - ₹${item.price}</span>
-                <div>
-                    <input type="number" min="1" value="1" id="qty-${sanitizedId}" style="width: 50px;">
-                    <button onclick="addToCart('${item.name}', ${item.price}, '${sanitizedId}')">Add to Cart</button>
+                <div class="flex justify-between items-center">
+                    <span class="text-lg">${item.name} - ₹${item.price}</span>
+                    <div class="flex items-center gap-2">
+                        <input type="number" min="1" value="1" id="qty-${sanitizedId}" class="w-16 p-1 rounded text-black">
+                        <button onclick="addToCart('${item.name}', ${item.price}, '${sanitizedId}')" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">Add to Cart</button>
+                    </div>
                 </div>
             `;
             menuContainer.appendChild(div);
@@ -61,9 +62,9 @@ async function displayMenu() {
     } catch (error) {
         console.error('Error fetching menu:', error.message);
         console.error('Error details:', error);
-        const menuContainer = document.getElementById('menu-items');
+        const menuContainer = document.getElementById('menu');
         if (menuContainer) {
-            menuContainer.innerHTML = '<p>Error loading menu. Please try again later.</p>';
+            menuContainer.innerHTML = '<p class="text-red-500">Error loading menu. Please try again later.</p>';
         }
     }
 }
@@ -90,9 +91,10 @@ function updateCart() {
     let total = 0;
 
     cart.forEach(item => {
-        const li = document.createElement('li');
-        li.textContent = `${item.name} (Qty: ${item.quantity}) - ₹${item.price * item.quantity}`;
-        cartItems.appendChild(li);
+        const div = document.createElement('div');
+        div.classList.add('cart-item');
+        div.textContent = `${item.name} (Qty: ${item.quantity}) - ₹${item.price * item.quantity}`;
+        cartItems.appendChild(div);
         total += item.price * item.quantity;
     });
 
@@ -125,7 +127,7 @@ async function submitOrder() {
     }
 
     const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const orderData = { cart, total, roomNumber, mobileNumber }; // Include room number and mobile number in the order data
+    const orderData = { cart, total, roomNumber, mobileNumber };
 
     try {
         const response = await fetch('https://rai-guest-house-proxy.vercel.app/submit-order', {
@@ -138,10 +140,20 @@ async function submitOrder() {
 
         const result = await response.json();
         if (result.status === 'success') {
-            alert('Order submitted successfully!');
-            cart = []; // Clear the cart
-            document.getElementById('room-number').value = ''; // Clear the room number input
-            document.getElementById('mobile-number').value = ''; // Clear the mobile number input
+            // Detailed order confirmation message
+            const orderSummary = cart.map(item => `${item.name} (Qty: ${item.quantity}) - ₹${item.price * item.quantity}`).join('\n');
+            alert(`Order submitted successfully!\n\nRoom Number: ${roomNumber}\nMobile Number: ${mobileNumber}\n\nOrder Details:\n${orderSummary}\n\nTotal: ₹${total}`);
+
+            // Show fireworks effect
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+
+            cart = [];
+            document.getElementById('room-number').value = '';
+            document.getElementById('mobile-number').value = '';
             updateCart();
         } else {
             alert('Error submitting order: ' + result.message);
