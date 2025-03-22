@@ -1,9 +1,11 @@
+console.log('script.js loaded'); // Debug to confirm script is loaded
+
 let cart = [];
 
 async function displayMenu() {
     console.log('Starting to fetch menu...');
     try {
-        const response = await fetch('https://script.google.com/macros/s/AKfycbyn5D-4VHShkibvWO7npc_vTeDJQAl5McDyAn-py0eXbpab7kl45RtWxKjt_sE2Fy-a/exec', {
+        const response = await fetch('https://cors-anywhere.herokuapp.com/https://script.google.com/macros/s/AKfycbyn5D-4VHShkibvWO7npc_vTeDJQAl5McDyAn-py0eXbpab7kl45RtWxKjt_sE2Fy-a/exec', {
             method: 'GET',
         });
         console.log('Response status:', response.status);
@@ -16,6 +18,25 @@ async function displayMenu() {
         const menu = await response.json();
         console.log('Menu fetched:', menu);
 
+        // Add debugging to check the menu data
+        if (!Array.isArray(menu)) {
+            console.error('Menu data is not an array:', menu);
+            const menuContainer = document.getElementById('menu-items');
+            if (menuContainer) {
+                menuContainer.innerHTML = '<p>Error: Menu data is not in the correct format.</p>';
+            }
+            return;
+        }
+
+        if (menu.length === 0) {
+            console.warn('Menu is empty:', menu);
+            const menuContainer = document.getElementById('menu-items');
+            if (menuContainer) {
+                menuContainer.innerHTML = '<p>No menu items available.</p>';
+            }
+            return;
+        }
+
         const menuContainer = document.getElementById('menu-items');
         if (!menuContainer) {
             console.error('Menu container not found!');
@@ -24,6 +45,7 @@ async function displayMenu() {
         menuContainer.innerHTML = '';
 
         menu.forEach((item, index) => {
+            console.log(`Rendering menu item ${index}:`, item); // Debug each item
             const sanitizedId = `item-${index}`;
             const div = document.createElement('div');
             div.classList.add('menu-item');
@@ -117,6 +139,9 @@ async function submitOrder() {
 }
 
 // Add event listener for the Submit Order button
+console.log('Adding event listener for submit-order button');
 document.getElementById('submit-order').addEventListener('click', submitOrder);
 
-window.onload = displayMenu;
+// Call displayMenu immediately to ensure it runs
+console.log('Calling displayMenu immediately');
+displayMenu();
