@@ -15,7 +15,7 @@ app.use(express.json());
 // Proxy for menu fetch (GET request)
 app.get('/menu', async (req, res) => {
     try {
-        const response = await axios.get('https://script.google.com/macros/s/AKfycbyn5D-4VHShkibvWO7npc_vTeDJQAl5McDyAn-py0eXbpab7kl45RtWxKjt_sE2Fy-a/exec');
+        const response = await axios.get('https://script.google.com/macros/s/AKfycbyOk4RILEo1pK6Xk2PhJs1n56CPcBuN6ch_Zs29LOElT3KhInfxP8bi055oeBb83RIy/exec');
         res.json(response.data);
     } catch (error) {
         console.error('Error fetching menu:', error.message);
