@@ -58,7 +58,7 @@ function addToCart(name, price, sanitizedId) {
 }
 
 function updateCart() {
-    const cartItems = document.getElementById('cart-items'); // Fixed syntax error here
+    const cartItems = document.getElementById('cart-items');
     const cartTotal = document.getElementById('cart-total');
     if (!cartItems || !cartTotal) {
         console.error('Cart elements not found!');
@@ -83,11 +83,17 @@ async function submitOrder() {
         return;
     }
 
+    const roomNumber = document.getElementById('room-number').value.trim();
+    if (!roomNumber) {
+        alert('Please enter your room number!');
+        return;
+    }
+
     const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const orderData = { cart, total };
+    const orderData = { cart, total, roomNumber }; // Include room number in the order data
 
     try {
-        const response = await fetch('https://cors-anywhere.herokuapp.com/https://script.google.com/macros/s/AKfycbyA_V3yRjeUxviJgHbVtNN4AK2Kzy3-ptuZSFYYjvWufphWpp4fgrqPuifAaTB_Nh93/exec', {
+        const response = await fetch('https://cors-anywhere.herokuapp.com/https://script.google.com/macros/s/AKfycbw6FlCFwgFE6OeuQx-Pj45pe3S1PRagpFrFQ5U4NmbJFZnDmPzg8bhJJtCULzNTQHSU/exec', {
             method: 'POST',
             body: JSON.stringify(orderData),
             headers: {
@@ -99,6 +105,7 @@ async function submitOrder() {
         if (result.status === 'success') {
             alert('Order submitted successfully!');
             cart = []; // Clear the cart
+            document.getElementById('room-number').value = ''; // Clear the room number input
             updateCart();
         } else {
             alert('Error submitting order: ' + result.message);
