@@ -111,11 +111,24 @@ async function submitOrder() {
         return;
     }
 
+    const mobileNumber = document.getElementById('mobile-number').value.trim();
+    if (!mobileNumber) {
+        alert('Please enter your mobile number!');
+        return;
+    }
+
+    // Validate mobile number (10 digits)
+    const mobileNumberPattern = /^[0-9]{10}$/;
+    if (!mobileNumberPattern.test(mobileNumber)) {
+        alert('Please enter a valid 10-digit mobile number!');
+        return;
+    }
+
     const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const orderData = { cart, total, roomNumber }; // Include room number in the order data
+    const orderData = { cart, total, roomNumber, mobileNumber }; // Include room number and mobile number in the order data
 
     try {
-        const response = await fetch('https://cors-anywhere.herokuapp.com/https://script.google.com/macros/s/AKfycbw6FlCFwgFE6OeuQx-Pj45pe3S1PRagpFrFQ5U4NmbJFZnDmPzg8bhJJtCULzNTQHSU/exec', {
+        const response = await fetch('https://cors-anywhere.herokuapp.com/https://script.google.com/macros/s/AKfycbzUqoV3WAIYybOFvrRULiTfIrEuSizP8NU0jOOz-XNuGdWnZNvojCf5c2b9CQaw90ET/exec', {
             method: 'POST',
             body: JSON.stringify(orderData),
             headers: {
@@ -128,6 +141,7 @@ async function submitOrder() {
             alert('Order submitted successfully!');
             cart = []; // Clear the cart
             document.getElementById('room-number').value = ''; // Clear the room number input
+            document.getElementById('mobile-number').value = ''; // Clear the mobile number input
             updateCart();
         } else {
             alert('Error submitting order: ' + result.message);
