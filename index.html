@@ -6,12 +6,18 @@
     <title>Rai Guest House Menu</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            background: url('luxury-bg.jpg') no-repeat center center fixed;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('luxury-bg.jpg') no-repeat center center fixed;
             background-size: cover;
             font-family: 'Poppins', sans-serif;
-            color: white;
+            color: #FFFDD0; /* Cream color for text */
+            scroll-behavior: smooth;
+        }
+        h1, h2 {
+            font-family: 'Cinzel', serif;
+            color: #FFD700; /* Gold color for headings */
         }
         .fade-in {
             opacity: 0;
@@ -26,52 +32,92 @@
             transition: transform 0.3s ease-in-out;
         }
         .glow-btn:hover {
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
-        }
-        .fireworks {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            pointer-events: none;
-            display: none;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+            transition: box-shadow 0.3s ease;
         }
         .menu-item {
-            background-color: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #FFD700;
+            backdrop-filter: blur(8px);
             border-radius: 10px;
             padding: 15px;
         }
         .cart-item {
-            background-color: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #FFD700;
+            backdrop-filter: blur(8px);
             border-radius: 8px;
             padding: 10px;
             margin-bottom: 10px;
         }
+        .category-tab {
+            background: #800000; /* Deep Maroon */
+            color: #FFD700;
+            padding: 10px 20px;
+            border-radius: 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .category-tab.active {
+            background: #FFD700;
+            color: #800000;
+        }
+        .category-tab:hover {
+            background: #FFD700;
+            color: #800000;
+        }
+        .loading-spinner {
+            display: none;
+            border: 4px solid #FFD700;
+            border-top: 4px solid transparent;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
-    <div class="container mx-auto text-center p-6 fade-in">
-        <h1 class="text-4xl font-bold mb-6 text-yellow-400">Rai Guest House Menu</h1>
-        <div id="menu" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="container mx-auto p-6 fade-in">
+        <h1 class="text-4xl md:text-5xl font-bold text-center mb-2">Rai Guest House Menu</h1>
+        <p class="text-center text-lg mb-6">Experience the Finest Dining at Rai Guest House</p>
+        <div class="flex justify-center flex-wrap gap-2 mb-6">
+            <button class="category-tab active" onclick="filterCategory('all')">All</button>
+            <button class="category-tab" onclick="filterCategory('Beverages')">Beverages</button>
+            <button class="category-tab" onclick="filterCategory('Main Course')">Main Course</button>
+            <button class="category-tab" onclick="filterCategory('Roti')">Roti</button>
+            <button class="category-tab" onclick="filterCategory('Rice')">Rice</button>
+            <button class="category-tab" onclick="filterCategory('Dal')">Dal</button>
+        </div>
+        <div id="loading-spinner" class="loading-spinner"></div>
+        <div id="menu" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <!-- Dynamic menu items will be added here -->
         </div>
-        <div class="mt-6 p-4 bg-gray-900 rounded">
-            <h2 class="text-2xl font-bold mb-2">Cart</h2>
+    </div>
+    <div class="sticky bottom-0 bg-black bg-opacity-90 p-4">
+        <div class="container mx-auto">
+            <h2 class="text-2xl font-bold mb-2 text-center">Cart</h2>
             <div id="cart-items" class="mb-4"></div>
-            <p id="total-price" class="mt-2 text-xl font-semibold">Total: ₹<span id="cart-total">0</span></p>
-            <div class="mt-4">
-                <label for="room-number" class="block text-left text-sm font-medium mb-1">Room Number:</label>
-                <input type="text" id="room-number" class="w-full max-w-xs p-2 rounded text-black" placeholder="Enter your room number" required>
+            <p class="text-center text-xl font-semibold mb-2">Total: ₹<span id="cart-total">0</span></p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4 mb-4">
+                <div>
+                    <label for="room-number" class="block text-sm font-medium mb-1">Room Number:</label>
+                    <input type="text" id="room-number" class="w-full sm:w-32 p-2 rounded text-black" placeholder="Room No." required>
+                </div>
+                <div>
+                    <label for="mobile-number" class="block text-sm font-medium mb-1">Mobile Number:</label>
+                    <input type="tel" id="mobile-number" class="w-full sm:w-32 p-2 rounded text-black" placeholder="Mobile No." pattern="[0-9]{10}" required>
+                </div>
             </div>
-            <div class="mt-2">
-                <label for="mobile-number" class="block text-left text-sm font-medium mb-1">Mobile Number:</label>
-                <input type="tel" id="mobile-number" class="w-full max-w-xs p-2 rounded text-black" placeholder="Enter your mobile number" pattern="[0-9]{10}" required>
-            </div>
-            <button id="submit-order" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 mt-4 rounded glow-btn">Place Order</button>
+            <button id="submit-order" class="block mx-auto bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black px-6 py-2 rounded glow-btn">Place Order</button>
         </div>
     </div>
-    <div class="fireworks" id="fireworks"></div>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script src="script.js"></script>
 </body>
