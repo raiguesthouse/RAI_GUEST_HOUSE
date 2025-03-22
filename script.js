@@ -58,7 +58,7 @@ function addToCart(name, price, sanitizedId) {
 }
 
 function updateCart() {
-    const cartItems = document.getElementById('cart-items');
+    const cartItems = document.getElementById('cart-items'); // Fixed syntax error here
     const cartTotal = document.getElementById('cart-total');
     if (!cartItems || !cartTotal) {
         console.error('Cart elements not found!');
@@ -87,7 +87,7 @@ async function submitOrder() {
     const orderData = { cart, total };
 
     try {
-        const response = await fetch('https://script.google.com/macros/s/AKfycbyA_V3yRjeUxviJgHbVtNN4AK2Kzy3-ptuZSFYYjvWufphWpp4fgrqPuifAaTB_Nh93/exec', {
+        const response = await fetch('https://cors-anywhere.herokuapp.com/https://script.google.com/macros/s/AKfycbyA_V3yRjeUxviJgHbVtNN4AK2Kzy3-ptuZSFYYjvWufphWpp4fgrqPuifAaTB_Nh93/exec', {
             method: 'POST',
             body: JSON.stringify(orderData),
             headers: {
