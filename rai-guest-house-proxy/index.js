@@ -13,7 +13,7 @@ app.get('/menu', async (req, res) => {
     try {
         // Apps Script se menu data fetch karo.
         // Agar Apps Script ka deployment URL change hota hai, to yeh URL update kar do.
-        const response = await axios.get('https://script.google.com/macros/s/AKfycbzLZYEB3MPzzaNPLDNLpL3oMiCpfrgDAzCFTIqGSMe-rPnAoFSfIOZlJM9f-eF_PLJj/exec');
+        const response = await axios.get('https://script.google.com/macros/s/<new-deployment-id>/exec');
         res.json(response.data);
     } catch (error) {
         // Koi error aaye to log karo aur error response website ko bhejo.
@@ -29,7 +29,7 @@ app.post('/submit-order', async (req, res) => {
     try {
         // Order data ko Apps Script ko bhejo.
         // Agar Apps Script ka deployment URL change hota hai, to yeh URL update kar do.
-        const response = await axios.post('https://script.google.com/macros/s/<new-deployment-id>/exec', req.body, {
+        const response = await axios.post('https://script.google.com/macros/s/AKfycbzcxGcpWlMM1zb3xsWfBRiw9kdUSkrS4cb8Xwt63IwZ81PHy2F7SdKjJ1WWd73ybFRf/exec', req.body, {
             headers: {
                 'Content-Type': 'application/json',
             },
