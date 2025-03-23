@@ -13,7 +13,7 @@ app.get('/menu', async (req, res) => {
     try {
         // Apps Script se menu data fetch karo.
         // Agar Apps Script ka deployment URL change hota hai, to yeh URL update kar do.
-        const response = await axios.get('https://script.google.com/macros/s/AKfycbzBw3rZmqWMprjY_-4CsVod9V9J1V-toa83dkJ3jNq6uU2sztc7XZb7YgLCWjR2dM9G/exec/exec');
+        const response = await axios.get('https://script.google.com/macros/s/AKfycbzLZYEB3MPzzaNPLDNLpL3oMiCpfrgDAzCFTIqGSMe-rPnAoFSfIOZlJM9f-eF_PLJj/exec');
         res.json(response.data);
     } catch (error) {
         // Koi error aaye to log karo aur error response website ko bhejo.
