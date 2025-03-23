@@ -43,7 +43,7 @@ app.post('/submit-order', async (req, res) => {
     try {
         console.log('Submitting order...', req.body);
         const response = await axios.post(
-            'https://script.google.com/macros/s/AKfycbx5fJ5DYZLJb33O65jGqaeXoWCUdiJWo_tJ60FQgNO6OTRANZ9vaf053099NNBk-Sin/exec',
+            'https://script.google.com/macros/s/AKfycbyTwDnIN2ekF7eqLXP1lPzhY1bJF5r8iyAAh3JeTrer9CSyTqzR3BtOYUK07sgKJm_C/exec',
             req.body,
             { headers: { 'Content-Type': 'application/json' } }
         );
