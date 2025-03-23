@@ -48,25 +48,22 @@ function displayMenu(menuItems) {
     const menuDiv = document.getElementById('menu-items');
     menuDiv.innerHTML = '';
 
-    // Categories ke hisaab se menu items group karo
-    const categories = [...new Set(menuItems.map(item => item.Category))]; // Changed from 'category' to 'Category'
+    const categories = [...new Set(menuItems.map(item => item.Category))];
     categories.forEach(category => {
-        // Category header with better styling
         const categoryHeader = document.createElement('h3');
         categoryHeader.textContent = category;
         categoryHeader.className = 'text-xl font-bold mb-4 mt-6 text-yellow-800 border-b-2 border-yellow-800 pb-2';
         menuDiv.appendChild(categoryHeader);
 
-        // Us category ke items display karo
-        const categoryItems = menuItems.filter(item => item.Category === category); // Changed from 'category' to 'Category'
+        const categoryItems = menuItems.filter(item => item.Category === category);
         categoryItems.forEach(item => {
             const itemDiv = document.createElement('div');
             itemDiv.className = 'menu-item bg-white p-4 rounded shadow-sm flex justify-between items-center';
             itemDiv.innerHTML = `
-                <span class="text-lg">${item.name} - ₹${item.price}</span>
+                <span class="text-lg font-bold">${item.name} - ₹${item.price}</span>
                 <button onclick="addToCart('${item.name}', ${item.price})" 
                         class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">
-                    + Add
+                    ₹${item.price}
                 </button>
             `;
             menuDiv.appendChild(itemDiv);
