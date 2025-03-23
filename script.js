@@ -48,26 +48,47 @@ function displayMenu(menuItems) {
     const menuDiv = document.getElementById('menu-items');
     menuDiv.innerHTML = '';
 
-    const categories = [...new Set(menuItems.map(item => item.Category))];
-    categories.forEach(category => {
-        const categoryHeader = document.createElement('h3');
-        categoryHeader.textContent = category;
-        categoryHeader.className = 'text-xl font-bold mb-4 mt-6 text-yellow-800 border-b-2 border-yellow-800 pb-2';
-        menuDiv.appendChild(categoryHeader);
+    // Group by categories
+    const groupedItems = {};
+    menuItems.forEach(item => {
+        if (!groupedItems[item.category]) {
+            groupedItems[item.category] = [];
+        }
+        groupedItems[item.category].push(item);
+    });
 
-        const categoryItems = menuItems.filter(item => item.Category === category);
-        categoryItems.forEach(item => {
+    // Display each category
+    Object.keys(groupedItems).forEach(category => {
+        // Add category header
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'category-section mb-8';
+        categoryDiv.innerHTML = `
+            <h2 class="text-2xl font-bold text-yellow-800 mb-4 border-b-2 border-yellow-600 pb-2">
+                ${category}
+            </h2>
+        `;
+        menuDiv.appendChild(categoryDiv);
+
+        // Add items in this category
+        const itemsContainer = document.createElement('div');
+        itemsContainer.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4';
+        
+        groupedItems[category].forEach(item => {
             const itemDiv = document.createElement('div');
-            itemDiv.className = 'menu-item bg-white p-4 rounded shadow-sm flex justify-between items-center';
+            itemDiv.className = 'bg-white p-4 rounded-lg shadow-md';
             itemDiv.innerHTML = `
-                <span class="text-lg font-bold">${item.name} - ₹${item.price}</span>
-                <button onclick="addToCart('${item.name}', ${item.price})" 
-                        class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">
-                    ₹${item.price}
-                </button>
+                <div class="flex justify-between items-center">
+                    <span class="text-lg font-bold">${item.name}</span>
+                    <button onclick="addToCart('${item.name}', ${item.price})" 
+                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">
+                        ₹${item.price}
+                    </button>
+                </div>
             `;
-            menuDiv.appendChild(itemDiv);
+            itemsContainer.appendChild(itemDiv);
         });
+        
+        categoryDiv.appendChild(itemsContainer);
     });
 }
 

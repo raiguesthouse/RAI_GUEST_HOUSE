@@ -36,7 +36,8 @@ app.get('/', (req, res) => {
 app.get('/menu', async (req, res) => {
     try {
         console.log('Fetching menu...');
-        const response = await axios.get(`${APPS_SCRIPT_URL}?action=getMenu&spreadsheetId=1RzPVjVA635R8GgjKSsvTLW2tC-FpVB0JdwVpp7ffVys`);
+        // Add parameters for menu structure
+        const response = await axios.get(`${APPS_SCRIPT_URL}?action=getMenu&spreadsheetId=1RzPVjVA635R8GgjKSsvTLW2tC-FpVB0JdwVpp7ffVys&sheetName=Menu`);
         console.log('Menu response:', response.data);
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.json(response.data);
@@ -56,15 +57,13 @@ app.post('/submit-order', async (req, res) => {
             throw new Error('Request body khali hai.');
         }
 
-        // Modified order data structure to match your sheets
         const orderDataWithSheet = {
             action: 'submitOrder',
             spreadsheetId: '1RzPVjVA635R8GgjKSsvTLW2tC-FpVB0JdwVpp7ffVys',
+            sheetName: 'Guest Orders',  // Exact sheet name
             data: {
                 ...req.body,
-                timestamp: new Date().toISOString(),
-                spreadsheetName: 'FOOD ORDERS',
-                sheetName: 'GUEST ORDERS'
+                timestamp: new Date().toISOString()
             }
         };
 
