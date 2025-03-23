@@ -7,6 +7,7 @@ let currentCategory = 'All'; // Default category
 // Categories ke buttons banane ke liye function
 function renderCategories() {
     const categories = ['All', 'Beverages', 'Main Course', 'Roti', 'Rice', 'Dal'];
+    const menuContainer = document.getElementById('menu-items');
     const categoryContainer = document.createElement('div');
     categoryContainer.classList.add('category-buttons', 'mb-4');
 
@@ -25,15 +26,13 @@ function renderCategories() {
         categoryContainer.appendChild(button);
     });
 
-    const menuContainer = document.getElementById('menu-items');
-    menuContainer.innerHTML = ''; // Clear previous content
-    menuContainer.appendChild(categoryContainer);
+    menuContainer.prepend(categoryContainer);
 }
 
 async function displayMenu() {
     console.log('Starting to fetch menu...');
     try {
-        const response = await fetch('https://rai-guest-house-proxy-qdjl5wprl-raiguesthouses-projects.vercel.app/menu', { // Updated URL
+        const response = await fetch('https://rai-guest-house-proxy-qdjl5wprl-raiguesthouses-projects.vercel.app/menu', {
             method: 'GET',
         });
         console.log('Response status:', response.status);
@@ -46,16 +45,31 @@ async function displayMenu() {
         menuItems = await response.json();
         console.log('Menu fetched:', menuItems);
 
-        // Validate menu data
+        // Add debugging to check the menu data
         if (!Array.isArray(menuItems)) {
-            throw new Error('Menu data is not in the correct format.');
+            console.error('Menu data is not an array:', menuItems);
+            const menuContainer = document.getElementById('menu-items');
+            if (menuContainer) {
+                menuContainer.innerHTML = '<p>Error: Menu data is not in the correct format.</p>';
+            }
+            return;
         }
 
         if (menuItems.length === 0) {
+            console.warn('Menu is empty:', menuItems);
             const menuContainer = document.getElementById('menu-items');
-            menuContainer.innerHTML = '<p>No menu items available.</p>';
+            if (menuContainer) {
+                menuContainer.innerHTML = '<p>No menu items available.</p>';
+            }
             return;
         }
+
+        const menuContainer = document.getElementById('menu-items');
+        if (!menuContainer) {
+            console.error('Menu container not found!');
+            return;
+        }
+        menuContainer.innerHTML = ''; // Clear previous content
 
         // Categories ke buttons render karo
         renderCategories();
@@ -65,7 +79,6 @@ async function displayMenu() {
             ? menuItems 
             : menuItems.filter(item => item.category === currentCategory);
 
-        const menuContainer = document.getElementById('menu-items');
         filteredItems.forEach((item, index) => {
             console.log(`Rendering menu item ${index}:`, item); // Debug each item
             const sanitizedId = `item-${index}`;
@@ -82,8 +95,11 @@ async function displayMenu() {
         });
     } catch (error) {
         console.error('Error fetching menu:', error.message);
+        console.error('Error details:', error);
         const menuContainer = document.getElementById('menu-items');
-        menuContainer.innerHTML = `<p>Error loading menu. ${error.message}</p>`;
+        if (menuContainer) {
+            menuContainer.innerHTML = '<p>Error loading menu. Please try again later.</p>';
+        }
     }
 }
 
@@ -157,6 +173,7 @@ async function submitOrder() {
         return;
     }
 
+    // Validate mobile number (10 digits)
     const mobileNumberPattern = /^[0-9]{10}$/;
     if (!mobileNumberPattern.test(mobileNumber)) {
         alert('Please enter a valid 10-digit mobile number!');
@@ -164,10 +181,10 @@ async function submitOrder() {
     }
 
     const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const orderData = { cart, total, roomNumber, mobileNumber };
+    const orderData = { cart, total, roomNumber, mobileNumber }; // Include room number and mobile number in the order data
 
     try {
-        const response = await fetch('https://rai-guest-house-proxy-qdjl5wprl-raiguesthouses-projects.vercel.app/submit-order', {
+        const response = await fetch('https://rai-guest-house-proxy-<new-hash>.vercel.app/submit-order', {
             method: 'POST',
             body: JSON.stringify(orderData),
             headers: {
@@ -178,9 +195,9 @@ async function submitOrder() {
         const result = await response.json();
         if (result.status === 'success') {
             alert('Order submitted successfully!');
-            cart = [];
-            document.getElementById('room-number').value = '';
-            document.getElementById('mobile-number').value = '';
+            cart = []; // Clear the cart
+            document.getElementById('room-number').value = ''; // Clear the room number input
+            document.getElementById('mobile-number').value = ''; // Clear the mobile number input
             updateCart();
         } else {
             alert('Error submitting order: ' + result.message);
