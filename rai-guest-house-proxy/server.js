@@ -26,7 +26,7 @@ app.get('/menu', async (req, res) => {
 // Proxy for order submission (POST request)
 app.post('/submit-order', async (req, res) => {
     try {
-        const response = await axios.post('https://script.google.com/macros/s/AKfycbw6FlCFwgFE6OeuQx-Pj45pe3S1PRagpFrFQ5U4NmbJFZnDmPzg8bhJJtCULzNTQHSU/exec', req.body, {
+        const response = await axios.post('https://script.google.com/macros/s/AKfycbwck6jU6UXYv7tRAWxEUNZ5gqYgQDSJCyasIqZBWK8WzuvBjzxbK5cVMVv_j7HHOktG/exec', req.body, {
             headers: {
                 'Content-Type': 'application/json',
             },
