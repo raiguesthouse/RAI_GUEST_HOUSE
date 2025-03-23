@@ -5,9 +5,9 @@ const cors = require('cors'); // CORS middleware import karo
 const app = express();
 
 // CORS middleware ko use karo taaki cross-origin requests allow ho sakein.
-// Specific origin set karo (https://rai-guest-house.github.io) taaki sirf yeh domain allow ho.
+// Exact origin set karo jo website ka hai: https://raiguesthouse.github.io
 app.use(cors({
-    origin: 'https://rai-guest-house.github.io'
+    origin: 'https://raiguesthouse.github.io'
 }));
 
 // Middleware to parse JSON bodies for POST requests.
