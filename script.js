@@ -1,47 +1,14 @@
 console.log('script.js loaded'); // Debugging
 
 let cart = [];
-let menuItems = []; // Global menu storage
-let currentCategory = 'All'; // Default category
 
-// **Categories ko render karne ka function**
-function renderCategories() {
-    const categories = ['All', 'Beverages', 'Main Course', 'Roti', 'Rice', 'Dal'];
-    const categoryContainer = document.getElementById('category-buttons');
-    if (!categoryContainer) {
-        console.error('Category container not found!');
-        return;
-    }
-
-    categoryContainer.innerHTML = ''; // Purane buttons clear karo
-
-    categories.forEach(category => {
-        const button = document.createElement('button');
-        button.textContent = category;
-        button.classList.add('category-btn', 'px-4', 'py-2', 'mr-2', 'rounded', 'transition', 'duration-300', 'bg-gray-200', 'hover:bg-gray-400');
-
-        if (category === currentCategory) {
-            button.classList.add('bg-gray-500', 'text-white');
-        }
-
-        button.addEventListener('click', () => {
-            currentCategory = category;
-            renderCategories(); // Buttons refresh
-            displayMenu(); // Menu filter karke render karo
-        });
-
-        categoryContainer.appendChild(button);
-    });
-}
-
-// **Menu items fetch & display function**
 async function displayMenu() {
     console.log('Fetching menu items...');
     try {
         const response = await fetch('https://rai-guest-house-proxy-7txh8o9rp-raiguesthouses-projects.vercel.app/menu');
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-        menuItems = await response.json();
+        const menuItems = await response.json();
         console.log('Menu fetched:', menuItems);
 
         if (!Array.isArray(menuItems) || menuItems.length === 0) {
@@ -50,13 +17,10 @@ async function displayMenu() {
         }
 
         document.getElementById('menu-items').innerHTML = ''; // Clear previous content
-        renderCategories(); // Render categories
 
-        const filteredItems = currentCategory === 'All' ? menuItems : menuItems.filter(item => item.category === currentCategory);
-
-        filteredItems.forEach((item, index) => {
+        menuItems.forEach((item, index) => {
             const div = document.createElement('div');
-            div.classList.add('menu-item', 'border', 'p-4', 'mb-2', 'rounded', 'flex', 'justify-between', 'items-center', 'transition', 'duration-300', 'hover:shadow-lg');
+            div.classList.add('menu-item', 'border', 'p-4', 'mb-2', 'rounded', 'flex', 'justify-between', 'items-center');
             div.innerHTML = `
                 <span>${item.name} - ₹${item.price}</span>
                 <div>
@@ -72,7 +36,6 @@ async function displayMenu() {
     }
 }
 
-// **Cart functionalities**
 function addToCart(name, price, quantityId) {
     const quantity = parseInt(document.getElementById(quantityId).value);
     const existingItem = cart.find(item => item.name === name);
@@ -122,7 +85,6 @@ function removeFromCart(index) {
     updateCart();
 }
 
-// **Order placement functionality**
 async function submitOrder() {
     if (cart.length === 0) {
         alert('Your cart is empty!');
@@ -140,7 +102,7 @@ async function submitOrder() {
     const orderData = { cart, total, roomNumber, mobileNumber };
 
     try {
-        const response = await fetch('https://rai-guest-house-proxy-e0r0828mq-raiguesthouses-projects.vercel.app/submit-order', {
+        const response = await fetch('https://rai-guest-house-proxy-7txh8o9rp-raiguesthouses-projects.vercel.app/submit-order', {
             method: 'POST',
             body: JSON.stringify(orderData),
             headers: { 'Content-Type': 'application/json' },
@@ -162,6 +124,5 @@ async function submitOrder() {
     }
 }
 
-// **Event listeners & Initializations**
 document.getElementById('submit-order').addEventListener('click', submitOrder);
 displayMenu(); // Load menu initially
