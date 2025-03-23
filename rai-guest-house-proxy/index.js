@@ -6,7 +6,9 @@ const app = express();
 
 // CORS middleware ko use karo taaki cross-origin requests allow ho sakein.
 app.use(cors({
-    origin: 'https://raiguesthouse.github.io'
+    origin: 'https://raiguesthouse.github.io', // Specific origin allow karo
+    methods: ['GET', 'POST'], // Allow GET and POST methods
+    allowedHeaders: ['Content-Type'], // Allow Content-Type header
 }));
 
 // Middleware to parse JSON bodies for POST requests.
