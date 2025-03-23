@@ -1,7 +1,7 @@
 let cart = [];
 let total = 0;
 
-// Add at the start of file
+// 🔹 Page load hone pe warning message show karega
 function showInitialWarning() {
     const agreed = localStorage.getItem('warningAgreed');
     if (!agreed) {
@@ -32,10 +32,10 @@ function showInitialWarning() {
     }
 }
 
-// Modify fetchMenu function
+// 🔹 Fetch menu from server
 async function fetchMenu() {
     try {
-        showInitialWarning(); // Page load pe warning dikhayega
+        showInitialWarning();
         const response = await fetch('https://rai-guest-house-proxy-666k9kuwo-raiguesthouses-projects.vercel.app/menu');
         const menuItems = await response.json();
         displayMenu(menuItems);
@@ -44,11 +44,11 @@ async function fetchMenu() {
     }
 }
 
+// 🔹 Display menu items
 function displayMenu(menuItems) {
     const menuDiv = document.getElementById('menu-items');
     menuDiv.innerHTML = '';
 
-    // Group by categories
     const groupedItems = {};
     menuItems.forEach(item => {
         if (!groupedItems[item.category]) {
@@ -57,9 +57,7 @@ function displayMenu(menuItems) {
         groupedItems[item.category].push(item);
     });
 
-    // Display each category
     Object.keys(groupedItems).forEach(category => {
-        // Add category header
         const categoryDiv = document.createElement('div');
         categoryDiv.className = 'category-section mb-8';
         categoryDiv.innerHTML = `
@@ -69,7 +67,6 @@ function displayMenu(menuItems) {
         `;
         menuDiv.appendChild(categoryDiv);
 
-        // Add items in this category
         const itemsContainer = document.createElement('div');
         itemsContainer.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4';
         
@@ -92,6 +89,7 @@ function displayMenu(menuItems) {
     });
 }
 
+// 🔹 Add item to cart
 function addToCart(name, price) {
     const existingItem = cart.find(item => item.name === name);
     if (existingItem) {
@@ -103,6 +101,7 @@ function addToCart(name, price) {
     updateCart();
 }
 
+// 🔹 Update cart display
 function updateCart() {
     const cartDiv = document.getElementById('cart-items');
     cartDiv.innerHTML = '';
@@ -118,6 +117,7 @@ function updateCart() {
     document.getElementById('cart-total').textContent = total;
 }
 
+// 🔹 Remove item from cart
 function removeFromCart(name, price) {
     const item = cart.find(item => item.name === name);
     if (item) {
@@ -130,6 +130,7 @@ function removeFromCart(name, price) {
     }
 }
 
+// 🔹 Submit order
 async function submitOrder() {
     if (cart.length === 0) {
         alert('कृपया कुछ आइटम्स ऑर्डर करें');
@@ -140,7 +141,6 @@ async function submitOrder() {
     const mobileNumber = document.getElementById('mobile-number').value;
     const termsAccepted = document.getElementById('terms-checkbox').checked;
 
-    // Basic validation
     if (!roomNumber || !mobileNumber) {
         alert('कृपया रूम नंबर और मोबाइल नंबर दोनों भरें');
         return;
@@ -151,12 +151,6 @@ async function submitOrder() {
         return;
     }
 
-    // Removed mobile number length validation temporarily to match Postman test
-    // if (mobileNumber.length !== 10 || !/^\d+$/.test(mobileNumber)) {
-    //     alert('कृपया सही मोबाइल नंबर डालें (10 अंकों का)');
-    //     return;
-    // }
-
     const orderData = {
         cart: cart,
         total: total,
@@ -165,18 +159,18 @@ async function submitOrder() {
     };
 
     try {
-        console.log('Submitting order with data:', orderData); // Debugging log
-        const response = await fetch('https://rai-guest-house-proxy-666k9kuwo-raiguesthouses-projects.vercel.app/submit-order', {
+        console.log('Submitting order with data:', orderData); 
+        const response = await fetch('https://script.google.com/macros/s/AKfycbwck6jU6UXYv7tRAWxEUNZ5gqYgQDSJCyasIqZBWK8WzuvBjzxbK5cVMVv_j7HHOktG/exec', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData)
         });
 
-        console.log('Response status:', response.status); // Debugging log
-        console.log('Response headers:', response.headers); // Debugging log
+        console.log('Response status:', response.status); 
+        console.log('Response headers:', response.headers); 
 
         const result = await response.json();
-        console.log('Response body:', result); // Debugging log
+        console.log('Response body:', result);
 
         if (result.status === 'success') {
             alert('Order placed successfully!');
@@ -192,8 +186,8 @@ async function submitOrder() {
     }
 }
 
-// Add this near the end of the file, just before fetchMenu()
+// 🔹 Add event listener to submit button
 document.getElementById('submit-order').addEventListener('click', submitOrder);
 
-// Fetch menu on page load
+// 🔹 Fetch menu on page load
 fetchMenu();
