@@ -99,6 +99,11 @@ function removeFromCart(name, price) {
 }
 
 async function submitOrder() {
+    if (cart.length === 0) {
+        alert('कृपया कुछ आइटम्स ऑर्डर करें');
+        return;
+    }
+
     const roomNumber = document.getElementById('room-number').value;
     const mobileNumber = document.getElementById('mobile-number').value;
     const termsAccepted = document.getElementById('terms-checkbox').checked;
@@ -111,6 +116,12 @@ async function submitOrder() {
 
     if (!termsAccepted) {
         alert('कृपया नीचे दिए गए checkbox को टिक करें');
+        return;
+    }
+
+    // Add this inside submitOrder() after the first validation
+    if (mobileNumber.length !== 10 || !/^\d+$/.test(mobileNumber)) {
+        alert('कृपया सही मोबाइल नंबर डालें (10 अंकों का)');
         return;
     }
 
@@ -140,6 +151,9 @@ async function submitOrder() {
         alert('Error placing order: ' + error.message);
     }
 }
+
+// Add this near the end of the file, just before fetchMenu()
+document.getElementById('submit-order').addEventListener('click', submitOrder);
 
 // Fetch menu on page load
 fetchMenu();
