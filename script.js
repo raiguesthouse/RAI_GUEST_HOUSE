@@ -5,13 +5,27 @@ let total = 0;
 function showInitialWarning() {
     const agreed = localStorage.getItem('warningAgreed');
     if (!agreed) {
-        const result = confirm("जरूरी सूचना (Important Notice):\n\n" + 
+        const hindiMessage = "जरूरी सूचना (Important Notice):\n\n" + 
             "कृपया सुनिश्चित करें:\n" +
             "- वही मोबाइल नंबर डालें जो आपने check-in के समय दिया था\n" +
             "- सही रूम नंबर चुनें\n\n" +
             "अगर ये details गलत होंगी तो आपका ऑर्डर process नहीं होगा,\n" +
             "चाहे website success message दिखाए।\n\n" +
-            "OK दबाकर आगे बढ़ें।");
+            "OK दबाकर आगे बढ़ें।";
+
+        const englishMessage = "Important Notice:\n\n" +
+            "Please ensure:\n" +
+            "- Enter the SAME mobile number you provided during check-in\n" +
+            "- Select your correct room number\n\n" +
+            "Your order will NOT be processed if these details don't match,\n" +
+            "even if you receive a success message.\n\n" +
+            "Click OK to proceed.";
+
+        const languageChoice = confirm("Choose language / भाषा चुनें:\n\n" +
+            "OK = English\n" +
+            "Cancel = हिंदी");
+
+        const result = confirm(languageChoice ? englishMessage : hindiMessage);
         if (result) {
             localStorage.setItem('warningAgreed', 'true');
         }

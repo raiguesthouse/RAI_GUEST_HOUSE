@@ -56,9 +56,16 @@ app.post('/submit-order', async (req, res) => {
             throw new Error('Request body khali hai.');
         }
 
+        // Add sheet information to the request body
+        const orderDataWithSheet = {
+            ...req.body,
+            spreadsheetName: 'FOOD ORDERS',  // The actual spreadsheet file name
+            sheetName: 'Guest Orders'        // The specific sheet/tab name
+        };
+
         const response = await axios.post(
             APPS_SCRIPT_URL,
-            req.body,
+            orderDataWithSheet,
             { 
                 headers: { 
                     'Content-Type': 'application/json',
@@ -84,6 +91,11 @@ app.options('*', (req, res) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
     res.sendStatus(200);
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
 
 module.exports = app;
