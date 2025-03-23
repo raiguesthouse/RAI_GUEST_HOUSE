@@ -5,7 +5,7 @@ let cart = [];
 async function displayMenu() {
     console.log('Fetching menu items...');
     try {
-        const response = await fetch('https://rai-guest-house-proxy-7txh8o9rp-raiguesthouses-projects.vercel.app/menu');
+        const response = await fetch('https://rai-guest-house-proxy-m42s62ust-raiguesthouses-projects.vercel.app/menu');
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const menuItems = await response.json();
@@ -16,7 +16,12 @@ async function displayMenu() {
             return;
         }
 
-        document.getElementById('menu-items').innerHTML = ''; // Clear previous content
+        const menuContainer = document.getElementById('menu-items');
+        if (!menuContainer) {
+            console.error('Menu container not found!');
+            return;
+        }
+        menuContainer.innerHTML = ''; // Clear previous content
 
         menuItems.forEach((item, index) => {
             const div = document.createElement('div');
@@ -28,11 +33,14 @@ async function displayMenu() {
                     <button onclick="addToCart('${item.name}', ${item.price}, 'qty-${index}')" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Add to Cart</button>
                 </div>
             `;
-            document.getElementById('menu-items').appendChild(div);
+            menuContainer.appendChild(div);
         });
     } catch (error) {
         console.error('Error fetching menu:', error.message);
-        document.getElementById('menu-items').innerHTML = '<p>Error loading menu.</p>';
+        const menuContainer = document.getElementById('menu-items');
+        if (menuContainer) {
+            menuContainer.innerHTML = '<p>Error loading menu.</p>';
+        }
     }
 }
 
@@ -51,6 +59,10 @@ function addToCart(name, price, quantityId) {
 function updateCart() {
     const cartItems = document.getElementById('cart-items');
     const cartTotal = document.getElementById('cart-total');
+    if (!cartItems || !cartTotal) {
+        console.error('Cart elements not found!');
+        return;
+    }
     cartItems.innerHTML = '';
     let total = 0;
 
@@ -102,7 +114,7 @@ async function submitOrder() {
     const orderData = { cart, total, roomNumber, mobileNumber };
 
     try {
-        const response = await fetch('https://rai-guest-house-proxy-7txh8o9rp-raiguesthouses-projects.vercel.app/submit-order', {
+        const response = await fetch('https://rai-guest-house-proxy-m42s62ust-raiguesthouses-projects.vercel.app/submit-order', {
             method: 'POST',
             body: JSON.stringify(orderData),
             headers: { 'Content-Type': 'application/json' },
@@ -124,5 +136,8 @@ async function submitOrder() {
     }
 }
 
-document.getElementById('submit-order').addEventListener('click', submitOrder);
-displayMenu(); // Load menu initially
+// DOM fully load hone ke baad displayMenu call karo
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('submit-order').addEventListener('click', submitOrder);
+    displayMenu(); // Load menu after DOM is ready
+});

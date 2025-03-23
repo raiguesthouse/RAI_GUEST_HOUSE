@@ -1,187 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Meta tags for character encoding aur responsive viewport ke liye -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- Page ka title -->
     <title>Rai Guest House</title>
-    
-    <!-- External libraries: Tailwind CSS styling ke liye, jQuery DOM manipulation ke liye -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    
-    <!-- Google Fonts elegant typography ke liye (Cinzel headings ke liye, Poppins body ke liye) -->
-    <!-- Agar fonts change karna hai to yahan font families update kar do -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    
-    <!-- Custom CSS website ke styling ke liye -->
     <style>
-        /* Body ka styling: Background image with dark overlay, font, aur text color */
-        /* Agar background image ya overlay color change karna hai to yahan update kar do */
-        body {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('luxury-bg.jpg') no-repeat center center fixed;
-            background-size: cover;
-            font-family: 'Poppins', sans-serif;
-            color: #FFFDD0; /* Cream color text ke liye */
-            scroll-behavior: smooth;
-        }
-
-        /* Heading ka styling: Cinzel font aur gold color use karo */
-        /* Agar font ya color change karna hai to yahan heading style update kar do */
-        h1, h2 {
-            font-family: 'Cinzel', serif;
-            color: #FFD700; /* Gold color headings ke liye */
-        }
-
-        /* Fade-in animation smooth page load ke liye */
-        /* Agar animation duration ya style change karna hai to yahan adjust kar do */
-        .fade-in {
-            opacity: 0;
-            animation: fadeIn 1.5s ease-in forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Hover effect interactive elements ke liye */
-        /* Agar scale ya transition change karna hai to yahan hover effect update kar do */
-        .hover-effect:hover {
-            transform: scale(1.05);
-            transition: transform 0.3s ease-in-out;
-        }
-
-        /* Glow effect buttons pe hover karne pe */
-        /* Agar glow color ya intensity change karna hai to yahan adjust kar do */
-        .glow-btn:hover {
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
-            transition: box-shadow 0.3s ease;
-        }
-
-        /* Menu item card ka styling: Glassmorphism effect with gold border */
-        /* Agar background, border, ya padding change karna hai to yahan card style update kar do */
         .menu-item {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #FFD700;
-            backdrop-filter: blur(8px);
-            border-radius: 10px;
-            padding: 10px;
-        }
-
-        /* Cart item card ka styling: Glassmorphism effect with gold border */
-        /* Agar background, border, ya padding change karna hai to yahan cart item style update kar do */
-        .cart-item {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #FFD700;
-            backdrop-filter: blur(8px);
-            border-radius: 8px;
-            padding: 8px;
-            margin-bottom: 8px;
-        }
-
-        /* Category tab ka styling: Maroon background with gold text */
-        /* Agar colors, padding, ya border-radius change karna hai to yahan tab style update kar do */
-        .category-tab {
-            background: #800000; /* Deep Maroon */
-            color: #FFD700;
-            padding: 8px 16px;
-            border-radius: 20px;
-            margin: 0 5px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-        .category-tab.active {
-            background: #FFD700;
-            color: #800000;
-        }
-        .category-tab:hover {
-            background: #FFD700;
-            color: #800000;
-        }
-
-        /* Loading spinner ka styling: Gold-colored spinner */
-        /* Agar size, color, ya animation speed change karna hai to yahan adjust kar do */
-        .loading-spinner {
-            display: none;
-            border: 4px solid #FFD700;
-            border-top: 4px solid transparent;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            margin: 10px 0;
         }
     </style>
 </head>
-<body>
-    <!-- Website ke content ke liye main container -->
-    <div class="container mx-auto p-6 fade-in">
-        <!-- Page ka heading -->
-        <h1 class="text-4xl md:text-5xl font-bold text-center mb-2">Rai Guest House</h1>
-        <!-- Heading ke neeche tagline -->
-        <p class="text-center text-lg mb-6">Experience the Finest Dining at Rai Guest House</p>
+<body class="bg-gray-100 font-sans">
+    <div class="container mx-auto p-4">
+        <h1 class="text-3xl font-bold text-center mb-6">Rai Guest House Restaurant Menu</h1>
         
-        <!-- Category tabs menu items filter karne ke liye -->
-        <!-- Agar categories add ya remove karni hain to yahan tabs add/remove kar do -->
-        <div class="flex justify-center flex-wrap gap-2 mb-6">
-            <button class="category-tab active" onclick="filterCategory('all')">All</button>
-            <button class="category-tab" onclick="filterCategory('Beverages')">Beverages</button>
-            <button class="category-tab" onclick="filterCategory('Main Course')">Main Course</button>
-            <button class="category-tab" onclick="filterCategory('Roti')">Roti</button>
-            <button class="category-tab" onclick="filterCategory('Rice')">Rice</button>
-            <button class="category-tab" onclick="filterCategory('Dal')">Dal</button>
-        </div>
-        
-        <!-- Loading spinner jo menu fetch hone ke dauraan dikhta hai -->
-        <div id="loading-spinner" class="loading-spinner"></div>
-        
-        <!-- Dynamically loaded menu items ke liye container -->
-        <!-- Agar layout change karna hai (jaise grid-cols change karna), to yahan adjust kar do -->
-        <div id="menu" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Dynamic menu items yahan script.js se add honge -->
+        <!-- Menu Items -->
+        <div id="menu-items" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+
+        <!-- Cart Section -->
+        <h2 class="text-2xl font-semibold mt-8 mb-4">Cart</h2>
+        <ul id="cart-items" class="mb-4"></ul>
+        <p class="text-lg font-semibold">Total: ₹<span id="cart-total">0</span></p>
+
+        <!-- Order Form -->
+        <div class="mt-6">
+            <label for="room-number" class="block text-lg font-medium mb-2">Room Number:</label>
+            <input type="text" id="room-number" placeholder="Enter your room number" class="border p-2 rounded w-full mb-4" required>
+
+            <label for="mobile-number" class="block text-lg font-medium mb-2">Mobile Number:</label>
+            <input type="tel" id="mobile-number" placeholder="Enter your mobile number" pattern="[0-9]{10}" class="border p-2 rounded w-full mb-4" required>
+
+            <button id="submit-order" class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600">Place Order</button>
         </div>
     </div>
-    
-    <!-- Sticky cart section jo neeche fixed hai -->
-    <!-- Agar cart ka styling ya position change karna hai to yahan update kar do -->
-    <div class="sticky bottom-0 bg-black bg-opacity-90 p-4">
-        <div class="container mx-auto">
-            <!-- Cart ka heading -->
-            <h2 class="text-2xl font-bold mb-2 text-center">Cart</h2>
-            <!-- Dynamically loaded cart items ke liye container -->
-            <div id="cart-items" class="mb-4"></div>
-            <!-- Total price display -->
-            <p class="text-center text-xl font-semibold mb-2">Total: ₹<span id="cart-total">0</span></p>
-            
-            <!-- Room number aur mobile number inputs -->
-            <!-- Agar input ka size ya styling change karna hai to yahan adjust kar do -->
-            <div class="flex flex-col sm:flex-row justify-center gap-4 mb-4">
-                <div>
-                    <label for="room-number" class="block text-sm font-medium mb-1">Room Number:</label>
-                    <input type="text" id="room-number" class="w-full sm:w-32 p-2 rounded text-black" placeholder="Room No." required>
-                </div>
-                <div>
-                    <label for="mobile-number" class="block text-sm font-medium mb-1">Registered mobile-number:</label>
-                    <input type="tel" id="mobile-number" class="w-full sm:w-32 p-2 rounded text-black" placeholder="Mobile No." pattern="[0-9]{10}" required>
-                </div>
-            </div>
-            
-            <!-- Place Order button -->
-            <!-- Agar button ka styling ya text change karna hai to yahan update kar do -->
-            <button id="submit-order" class="block mx-auto bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black px-6 py-2 rounded glow-btn">Place Order</button>
-        </div>
-    </div>
-    
-    <!-- External library fireworks effect ke liye order submission pe -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-    
-    <!-- Main JavaScript file website ke functionality ke liye -->
+
     <script src="script.js"></script>
 </body>
 </html>
