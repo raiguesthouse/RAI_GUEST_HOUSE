@@ -5,7 +5,7 @@ let cart = [];
 async function displayMenu() {
     console.log('Fetching menu items...');
     try {
-        const response = await fetch('https://rai-guest-house-proxy-bhpfckv2c-raiguesthouses-projects.vercel.app/menu');
+        const response = await fetch('https://rai-guest-house-proxy-q10ojoj77-raiguesthouses-projects.vercel.app/menu');
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const menuItems = await response.json();
@@ -114,7 +114,7 @@ async function submitOrder() {
     const orderData = { cart, total, roomNumber, mobileNumber };
 
     try {
-        const response = await fetch('https://rai-guest-house-proxy-bhpfckv2c-raiguesthouses-projects.vercel.app/submit-order', {
+        const response = await fetch('https://rai-guest-house-proxy-q10ojoj77-raiguesthouses-projects.vercel.app/submit-order', {
             method: 'POST',
             body: JSON.stringify(orderData),
             headers: { 'Content-Type': 'application/json' },

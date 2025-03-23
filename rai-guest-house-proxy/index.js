@@ -1,50 +1,68 @@
-// Required modules import karo Vercel proxy server ke liye.
 const express = require('express');
 const axios = require('axios');
-const cors = require('cors'); // CORS middleware import karo
+const cors = require('cors');
+
 const app = express();
 
-// CORS middleware ko use karo taaki sabhi origins allow ho sakein.
+// ✅ CORS properly set karo taaki frontend access kar sake!
 app.use(cors({
-    origin: '*', // Sabhi origins allow karne ke liye '*' use karo
-    methods: ['GET', 'POST'], // Allow GET and POST methods
-    allowedHeaders: ['Content-Type'], // Allow Content-Type header
+    origin: '*', // ✅ Sabhi origins allow karo
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
 }));
 
-// Middleware to parse JSON bodies for POST requests.
-app.use(express.json());
-
-// Root endpoint ke liye ek simple response add karo.
-app.get('/', (req, res) => {
-    res.send('Welcome to Rai Guest House Proxy! Use /menu to fetch menu items or /submit-order to place an order.');
+// ✅ CORS headers manually add karo taaki browser block na kare!
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
 });
 
-// Yeh endpoint menu fetch karta hai Apps Script ke /menu endpoint se.
+// ✅ Default route
+app.get('/', (req, res) => {
+    res.send('Welcome to Rai Guest House Proxy Server 🚀');
+});
+
+// ✅ Menu fetch API
 app.get('/menu', async (req, res) => {
     try {
-        // Apps Script se menu data fetch karo.
+        console.log('Fetching menu...');
         const response = await axios.get('https://script.google.com/macros/s/AKfycbx5fJ5DYZLJb33O65jGqaeXoWCUdiJWo_tJ60FQgNO6OTRANZ9vaf053099NNBk-Sin/exec');
+        
+        res.setHeader('Access-Control-Allow-Origin', '*'); // ✅ Ensure CORS is set
         res.json(response.data);
     } catch (error) {
         console.error('Error fetching menu:', error.message);
-        res.status(500).json({ status: 'error', message: error.message });
+        res.status(500).json({ error: 'Failed to fetch menu.' });
     }
 });
 
-// Yeh endpoint order submit karta hai Apps Script ke /submit-order endpoint pe.
+// ✅ Order submission API
 app.post('/submit-order', async (req, res) => {
     try {
-        const response = await axios.post('https://script.google.com/macros/s/AKfycbx5fJ5DYZLJb33O65jGqaeXoWCUdiJWo_tJ60FQgNO6OTRANZ9vaf053099NNBk-Sin/exec', req.body, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
+        console.log('Submitting order...', req.body);
+        const response = await axios.post(
+            'https://script.google.com/macros/s/AKfycbx5fJ5DYZLJb33O65jGqaeXoWCUdiJWo_tJ60FQgNO6OTRANZ9vaf053099NNBk-Sin/exec',
+            req.body,
+            { headers: { 'Content-Type': 'application/json' } }
+        );
+
+        res.setHeader('Access-Control-Allow-Origin', '*'); // ✅ Ensure CORS is set
         res.json(response.data);
     } catch (error) {
         console.error('Error submitting order:', error.message);
-        res.status(500).json({ status: 'error', message: error.message });
+        res.status(500).json({ error: 'Failed to submit order.' });
     }
 });
 
-// App ko export karo taaki Vercel deploy kar sake.
+// ✅ Handle preflight requests for CORS (important)
+app.options('*', (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.sendStatus(200);
+});
+
+// ✅ Export for Vercel deployment
 module.exports = app;
