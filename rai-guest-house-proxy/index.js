@@ -4,8 +4,8 @@ const cors = require('cors');
 
 const app = express();
 
-// Apps Script ka Deploy URL
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5fJ5DYZLJb33O65jGqaeXoWCUdiJWo_tJ60FQgNO6OTRANZ9vaf053099NNBk-Sin/exec';
+// Update the Apps Script URL
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyTwDnIN2ekF7eqLXP1lPzhY1bJF5r8iyAAh3JeTrer9CSyTqzR3BtOYUK07sgKJm_C/exec';
 
 app.use(cors({
     origin: '*',
@@ -56,12 +56,14 @@ app.post('/submit-order', async (req, res) => {
             throw new Error('Request body khali hai.');
         }
 
-        // Modify the order data to match exact sheet structure
+        // Modified order data structure to match your sheets
         const orderDataWithSheet = {
-            action: 'submitOrder',  // Add this to tell Apps Script what to do
+            action: 'submitOrder',
             data: {
                 ...req.body,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                spreadsheetName: 'FOOD ORDERS',
+                sheetName: 'GUEST ORDERS'
             }
         };
 
