@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
 app.get('/menu', async (req, res) => {
     try {
         console.log('Fetching menu...');
-        const response = await axios.get(APPS_SCRIPT_URL);
+        const response = await axios.get(`${APPS_SCRIPT_URL}?action=getMenu`);  // Add action parameter
         console.log('Menu response:', response.data);
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.json(response.data);
@@ -56,11 +56,13 @@ app.post('/submit-order', async (req, res) => {
             throw new Error('Request body khali hai.');
         }
 
-        // Add sheet information to the request body
+        // Modify the order data to match exact sheet structure
         const orderDataWithSheet = {
-            ...req.body,
-            spreadsheetName: 'FOOD ORDERS',  // The actual spreadsheet file name
-            sheetName: 'Guest Orders'        // The specific sheet/tab name
+            action: 'submitOrder',  // Add this to tell Apps Script what to do
+            data: {
+                ...req.body,
+                timestamp: new Date().toISOString()
+            }
         };
 
         const response = await axios.post(
