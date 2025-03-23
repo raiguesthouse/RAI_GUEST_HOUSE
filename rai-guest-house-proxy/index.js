@@ -4,7 +4,7 @@ const cors = require('cors');
 
 const app = express();
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyTwDnIN2ekF7eqLXP1lPzhY1bJF5r8iyAAh3JeTrer9CSyTqzR3BtOYUK07sgKJm_C/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyTwDnIN2ekF7eqLXP1lPzhY1bJF5r8iyAAh3JeTrer9CSyTqzR3BtOYUK07sgKJm_C/exec'; // Update with new Deploy URL if changed
 
 app.use(cors({
     origin: '*',
@@ -15,6 +15,7 @@ app.use(cors({
 app.use(express.json());
 
 app.use((req, res, next) => {
+    console.log('Incoming request:', req.method, req.url);
     console.log('Raw request body:', req.body);
     console.log('Request headers:', req.headers);
     next();
@@ -31,7 +32,7 @@ app.get('/', (req, res) => {
     res.send('Welcome to Rai Guest House Proxy Server 🚀');
 });
 
-app.get('/menu', async (req, res) => {
+app.get('/menu', async (req, res) => { ... });
     try {
         console.log('Fetching menu...');
         const response = await axios.get(APPS_SCRIPT_URL);
