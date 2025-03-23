@@ -32,7 +32,7 @@ function renderCategories() {
 async function displayMenu() {
     console.log('Starting to fetch menu...');
     try {
-        const response = await fetch('https://rai-guest-house-proxy-qdjl5wprl-raiguesthouses-projects.vercel.app/menu', {
+        const response = await fetch('https://rai-guest-house-proxy-qdjl5wprl-raiguesthouses-projects.vercel.app', {
             method: 'GET',
         });
         console.log('Response status:', response.status);
