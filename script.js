@@ -167,11 +167,11 @@ async function submitOrder() {
 
     try {
         // Vercel proxy pe order submit karo (POST request bhejo)
-        const response = await fetch('https://rai-guest-house-proxy-d1sguox7v-raiguesthouses-projects.vercel.app/submit-order', {
-            method: 'POST',
-            body: JSON.stringify(orderData),
-            headers: { 'Content-Type': 'application/json' },
-        });
+        const response = await fetch('https://rai-guest-house-proxy-d1sgu0xv-raiguesthouses-projects.vercel.app/submit-order', {
+    method: 'POST',
+    body: JSON.stringify(orderData),
+    headers: { 'Content-Type': 'application/json' },
+});
 
         // Response ko JSON format mein parse karo
         const result = await response.json();
