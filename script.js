@@ -78,7 +78,7 @@ function displayMenu(menuItems) {
             itemDiv.className = 'bg-white p-4 rounded-lg shadow-md';
             itemDiv.innerHTML = `
                 <div class="flex justify-between items-center">
-                    <span class="text-base font-semibold">${item.name}</span>  // Changed from text-lg to text-base
+                    <span class="text-base font-semibold">${item.name}</span>
                     <button onclick="addToCart('${item.name}', ${item.price})" 
                             class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">
                         ₹${item.price}
@@ -151,7 +151,6 @@ async function submitOrder() {
         return;
     }
 
-    // Add this inside submitOrder() after the first validation
     if (mobileNumber.length !== 10 || !/^\d+$/.test(mobileNumber)) {
         alert('कृपया सही मोबाइल नंबर डालें (10 अंकों का)');
         return;
@@ -161,21 +160,24 @@ async function submitOrder() {
         cart: cart,
         total: total,
         roomNumber: roomNumber,
-        mobileNumber: mobileNumber,
-        // Add sheet details that you can modify
-        sheetDetails: {
-            spreadsheetName: prompt ('FOOD ORDERS'),
-            sheetName: prompt ('Guest Orders')
-        }
+        mobileNumber: mobileNumber
+        // Removed sheetDetails since Apps Script is using hardcoded values
     };
 
     try {
+        console.log('Submitting order with data:', orderData); // Debugging log
         const response = await fetch('https://rai-guest-house-proxy-666k9kuwo-raiguesthouses-projects.vercel.app/submit-order', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData)
         });
+
+        console.log('Response status:', response.status); // Debugging log
+        console.log('Response headers:', response.headers); // Debugging log
+
         const result = await response.json();
+        console.log('Response body:', result); // Debugging log
+
         if (result.status === 'success') {
             alert('Order placed successfully!');
             cart = [];
@@ -185,6 +187,7 @@ async function submitOrder() {
             alert('Error placing order: ' + result.message);
         }
     } catch (error) {
+        console.error('Error submitting order:', error);
         alert('Error placing order: ' + error.message);
     }
 }
