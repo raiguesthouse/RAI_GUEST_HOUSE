@@ -57,12 +57,15 @@ app.post('/submit-order', async (req, res) => {
             throw new Error('Request body khali hai.');
         }
 
+        // Restructure order data
         const orderDataWithSheet = {
             action: 'submitOrder',
             spreadsheetId: '1RzPVjVA635R8GgjKSsvTLW2tC-FpVB0JdwVpp7ffVys',
-            sheetName: 'Guest Orders',  // Exact sheet name
             data: {
-                ...req.body,
+                roomNumber: req.body.roomNumber,
+                mobileNumber: req.body.mobileNumber,
+                orderItems: req.body.items,
+                total: req.body.total,
                 timestamp: new Date().toISOString()
             }
         };

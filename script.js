@@ -78,7 +78,7 @@ function displayMenu(menuItems) {
             itemDiv.className = 'bg-white p-4 rounded-lg shadow-md';
             itemDiv.innerHTML = `
                 <div class="flex justify-between items-center">
-                    <span class="text-lg font-bold">${item.name}</span>
+                    <span class="text-base font-semibold">${item.name}</span>  // Changed from text-lg to text-base
                     <button onclick="addToCart('${item.name}', ${item.price})" 
                             class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">
                         ₹${item.price}
