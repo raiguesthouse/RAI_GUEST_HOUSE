@@ -31,6 +31,19 @@
             <label for="mobile-number" class="block text-lg font-medium mb-2">Mobile Number:</label>
             <input type="tel" id="mobile-number" placeholder="Enter your mobile number" pattern="[0-9]{10}" class="border p-2 rounded w-full mb-4" required>
 
+            <!-- After mobile number input and before submit button, add this: -->
+            <div class="warning-note bg-yellow-100 p-4 rounded border border-yellow-200 my-4">
+                <strong class="text-yellow-800">⚠️ जरूरी सूचना:</strong>
+                <ul class="list-disc ml-4 mt-2">
+                    <li>वही मोबाइल नंबर डालें जो आपने check-in के समय दिया था</li>
+                    <li>सही रूम नंबर चुनें</li>
+                </ul>
+            </div>
+
+            <div class="terms-agreement mb-4">
+                <input type="checkbox" id="terms-checkbox" class="mr-2" required>
+                <label for="terms-checkbox">मैं पुष्टि करता/करती हूं कि मैंने सही रूम नंबर और check-in वाला मोबाइल नंबर डाला है</label>
+            </div>
             <button id="submit-order" class="bg-green-500 text-white px-6 py-2 rounded hover:bg-green-600">Place Order</button>
         </div>
     </div>

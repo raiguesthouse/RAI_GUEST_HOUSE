@@ -4,7 +4,8 @@ const cors = require('cors');
 
 const app = express();
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyTwDnIN2ekF7eqLXP1lPzhY1bJF5r8iyAAh3JeTrer9CSyTqzR3BtOYUK07sgKJm_C/exec'; // Update with new Deploy URL if changed
+// Apps Script ka Deploy URL
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx5fJ5DYZLJb33O65jGqaeXoWCUdiJWo_tJ60FQgNO6OTRANZ9vaf053099NNBk-Sin/exec';
 
 app.use(cors({
     origin: '*',
@@ -32,7 +33,7 @@ app.get('/', (req, res) => {
     res.send('Welcome to Rai Guest House Proxy Server 🚀');
 });
 
-app.get('/menu', async (req, res) => { ... });
+app.get('/menu', async (req, res) => {
     try {
         console.log('Fetching menu...');
         const response = await axios.get(APPS_SCRIPT_URL);
@@ -41,6 +42,9 @@ app.get('/menu', async (req, res) => { ... });
         res.json(response.data);
     } catch (error) {
         console.error('Error fetching menu:', error.message);
+        if (error.response) {
+            console.error('Apps Script error response:', error.response.data);
+        }
         res.status(500).json({ error: 'Failed to fetch menu: ' + error.message });
     }
 });
