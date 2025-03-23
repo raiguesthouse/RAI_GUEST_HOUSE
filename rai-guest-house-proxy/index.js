@@ -4,9 +4,9 @@ const axios = require('axios');
 const cors = require('cors'); // CORS middleware import karo
 const app = express();
 
-// CORS middleware ko use karo taaki cross-origin requests allow ho sakein.
+// CORS middleware ko use karo taaki sabhi origins allow ho sakein.
 app.use(cors({
-    origin: 'https://raiguesthouse.github.io', // Specific origin allow karo
+    origin: '*', // Sabhi origins allow karne ke liye '*' use karo
     methods: ['GET', 'POST'], // Allow GET and POST methods
     allowedHeaders: ['Content-Type'], // Allow Content-Type header
 }));
