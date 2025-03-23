@@ -1,10 +1,22 @@
 // Required modules import karo Vercel proxy server ke liye.
 const express = require('express');
 const axios = require('axios');
+const cors = require('cors'); // CORS middleware import karo
 const app = express();
+
+// CORS middleware ko use karo taaki cross-origin requests allow ho sakein.
+// Specific origin set karo (https://rai-guest-house.github.io) taaki sirf yeh domain allow ho.
+app.use(cors({
+    origin: 'https://rai-guest-house.github.io'
+}));
 
 // Middleware to parse JSON bodies for POST requests.
 app.use(express.json());
+
+// Root endpoint ke liye ek simple response add karo.
+app.get('/', (req, res) => {
+    res.send('Welcome to Rai Guest House Proxy! Use /menu to fetch menu items or /submit-order to place an order.');
+});
 
 // Yeh endpoint menu fetch karta hai Apps Script ke /menu endpoint se.
 // Yeh website aur Apps Script ke beech proxy ka kaam karta hai taaki CORS aur security issues na ho.
@@ -13,7 +25,7 @@ app.get('/menu', async (req, res) => {
     try {
         // Apps Script se menu data fetch karo.
         // Agar Apps Script ka deployment URL change hota hai, to yeh URL update kar do.
-        const response = await axios.get('https://script.google.com/macros/s/<new-deployment-id>/exec');
+        const response = await axios.get('https://script.google.com/macros/s/AKfycbx5fJ5DYZLJb33O65jGqaeXoWCUdiJWo_tJ60FQgNO6OTRANZ9vaf053099NNBk-Sin/exec');
         res.json(response.data);
     } catch (error) {
         // Koi error aaye to log karo aur error response website ko bhejo.
@@ -29,7 +41,7 @@ app.post('/submit-order', async (req, res) => {
     try {
         // Order data ko Apps Script ko bhejo.
         // Agar Apps Script ka deployment URL change hota hai, to yeh URL update kar do.
-        const response = await axios.post('https://script.google.com/macros/s/AKfycbzcxGcpWlMM1zb3xsWfBRiw9kdUSkrS4cb8Xwt63IwZ81PHy2F7SdKjJ1WWd73ybFRf/exec', req.body, {
+        const response = await axios.post('https://script.google.com/macros/s/AKfycbx5fJ5DYZLJb33O65jGqaeXoWCUdiJWo_tJ60FQgNO6OTRANZ9vaf053099NNBk-Sin/exec', req.body, {
             headers: {
                 'Content-Type': 'application/json',
             },
