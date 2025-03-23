@@ -38,7 +38,7 @@ function renderCategories() {
 async function displayMenu() {
     console.log('Fetching menu items...');
     try {
-        const response = await fetch('https://rai-guest-house-proxy-<new-hash>.vercel.app/menu');
+        const response = await fetch('https://rai-guest-house-proxy-qdjl5wprl-raiguesthouses-projects.vercel.app/menu');
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         menuItems = await response.json();
