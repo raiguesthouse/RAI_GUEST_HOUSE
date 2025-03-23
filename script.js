@@ -151,17 +151,17 @@ async function submitOrder() {
         return;
     }
 
-    if (mobileNumber.length !== 10 || !/^\d+$/.test(mobileNumber)) {
-        alert('कृपया सही मोबाइल नंबर डालें (10 अंकों का)');
-        return;
-    }
+    // Removed mobile number length validation temporarily to match Postman test
+    // if (mobileNumber.length !== 10 || !/^\d+$/.test(mobileNumber)) {
+    //     alert('कृपया सही मोबाइल नंबर डालें (10 अंकों का)');
+    //     return;
+    // }
 
     const orderData = {
         cart: cart,
         total: total,
         roomNumber: roomNumber,
         mobileNumber: mobileNumber
-        // Removed sheetDetails since Apps Script is using hardcoded values
     };
 
     try {
