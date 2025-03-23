@@ -1,11 +1,14 @@
 let cart = [];
 let total = 0;
 
-// 🔹 Page load hone pe warning message show karega
+// ✅ Vercel Proxy API
+const API_URL = "https://rai-guest-house-proxy-7txh8o9rp-raiguesthouses-projects.vercel.app/submit-order";
+
+// 🚨 Show warning on page load
 function showInitialWarning() {
     const agreed = localStorage.getItem('warningAgreed');
     if (!agreed) {
-        const hindiMessage = "जरूरी सूचना (Important Notice):\n\n" + 
+        const hindiMessage = "जरूरी सूचना (Important Notice):\n\n" +
             "कृपया सुनिश्चित करें:\n" +
             "- वही मोबाइल नंबर डालें जो आपने check-in के समय दिया था\n" +
             "- सही रूम नंबर चुनें\n\n" +
@@ -22,8 +25,8 @@ function showInitialWarning() {
             "Click OK to proceed.";
 
         const languageChoice = confirm("Choose language / भाषा चुनें:\n\n" +
-            "OK = English\n" +
-            "Cancel = हिंदी");
+            "English = English\n" +
+            "हिंदी = हिंदी");
 
         const result = confirm(languageChoice ? englishMessage : hindiMessage);
         if (result) {
@@ -32,11 +35,11 @@ function showInitialWarning() {
     }
 }
 
-// 🔹 Fetch menu from server
+// ✅ Fetch menu items
 async function fetchMenu() {
     try {
         showInitialWarning();
-        const response = await fetch('https://rai-guest-house-proxy-666k9kuwo-raiguesthouses-projects.vercel.app/menu');
+        const response = await fetch('https://rai-guest-house-proxy-7txh8o9rp-raiguesthouses-projects.vercel.app/menu');
         const menuItems = await response.json();
         displayMenu(menuItems);
     } catch (error) {
@@ -44,7 +47,7 @@ async function fetchMenu() {
     }
 }
 
-// 🔹 Display menu items
+// ✅ Display menu items
 function displayMenu(menuItems) {
     const menuDiv = document.getElementById('menu-items');
     menuDiv.innerHTML = '';
@@ -84,12 +87,12 @@ function displayMenu(menuItems) {
             `;
             itemsContainer.appendChild(itemDiv);
         });
-        
+
         categoryDiv.appendChild(itemsContainer);
     });
 }
 
-// 🔹 Add item to cart
+// ✅ Add to cart
 function addToCart(name, price) {
     const existingItem = cart.find(item => item.name === name);
     if (existingItem) {
@@ -101,7 +104,7 @@ function addToCart(name, price) {
     updateCart();
 }
 
-// 🔹 Update cart display
+// ✅ Update cart
 function updateCart() {
     const cartDiv = document.getElementById('cart-items');
     cartDiv.innerHTML = '';
@@ -117,7 +120,7 @@ function updateCart() {
     document.getElementById('cart-total').textContent = total;
 }
 
-// 🔹 Remove item from cart
+// ✅ Remove from cart
 function removeFromCart(name, price) {
     const item = cart.find(item => item.name === name);
     if (item) {
@@ -130,7 +133,7 @@ function removeFromCart(name, price) {
     }
 }
 
-// 🔹 Submit order
+// ✅ Submit order (with Vercel Proxy)
 async function submitOrder() {
     if (cart.length === 0) {
         alert('कृपया कुछ आइटम्स ऑर्डर करें');
@@ -159,15 +162,13 @@ async function submitOrder() {
     };
 
     try {
-        console.log('Submitting order with data:', orderData); 
-        const response = await fetch('https://script.google.com/macros/s/AKfycbwck6jU6UXYv7tRAWxEUNZ5gqYgQDSJCyasIqZBWK8WzuvBjzxbK5cVMVv_j7HHOktG/exec', {
+        console.log('Submitting order with data:', orderData);
+
+        const response = await fetch(API_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData)
         });
-
-        console.log('Response status:', response.status); 
-        console.log('Response headers:', response.headers); 
 
         const result = await response.json();
         console.log('Response body:', result);
@@ -186,8 +187,8 @@ async function submitOrder() {
     }
 }
 
-// 🔹 Add event listener to submit button
+// ✅ Attach event listener to submit button
 document.getElementById('submit-order').addEventListener('click', submitOrder);
 
-// 🔹 Fetch menu on page load
+// ✅ Fetch menu on page load
 fetchMenu();
