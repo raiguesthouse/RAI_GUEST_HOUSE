@@ -161,14 +161,19 @@ async function submitOrder() {
         cart: cart,
         total: total,
         roomNumber: roomNumber,
-        mobileNumber: mobileNumber
+        mobileNumber: mobileNumber,
+        // Add sheet details that you can modify
+        sheetDetails: {
+            spreadsheetName: prompt ('FOOD ORDERS'),
+            sheetName: prompt ('Guest Orders')
+        }
     };
 
     try {
         const response = await fetch('https://rai-guest-house-proxy-666k9kuwo-raiguesthouses-projects.vercel.app/submit-order', {
             method: 'POST',
-            body: JSON.stringify(orderData),
             headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData)
         });
         const result = await response.json();
         if (result.status === 'success') {
