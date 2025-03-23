@@ -10,7 +10,7 @@ async function displayMenu() {
     console.log('Fetching menu items...'); // Menu fetch hone ka message
     try {
         // Vercel proxy se menu fetch karo (GET request bhejo)
-        const response = await fetch('https://rai-guest-house-proxy-3zk0bmew6-raiguesthouses-projects.vercel.app/menu');
+        const response = await fetch('https://rai-guest-house-proxy-d1sguox7v-raiguesthouses-projects.vercel.app/menu');
         // Agar response sahi nahi aaya to error throw karo
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
@@ -167,7 +167,7 @@ async function submitOrder() {
 
     try {
         // Vercel proxy pe order submit karo (POST request bhejo)
-        const response = await fetch('https://rai-guest-house-proxy-3zk0bmew6-raiguesthouses-projects.vercel.app/submit-order', {
+        const response = await fetch('https://rai-guest-house-proxy-d1sguox7v-raiguesthouses-projects.vercel.app/submit-order', {
             method: 'POST',
             body: JSON.stringify(orderData),
             headers: { 'Content-Type': 'application/json' },
