@@ -5,7 +5,7 @@ const cors = require('cors');
 const app = express();
 
 // Update the Apps Script URL
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzZY6a4f7CG4C373daFARv1AEga6mxWUV2ngCcCrU3cqXfISi0goPSJqk8Qc73vGymm/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVU24aKsvOD6wd2_p70vaNeeF-H4PA9PjT1SQkjgFPKdc0Yl0-8Rt87B4eovgi--eX/exec';
 
 // Enable CORS for all origins
 app.use(cors({
@@ -76,6 +76,7 @@ app.get('/menu', async (req, res) => {
     }
 });
 
+// Keep the submit-order endpoint as is for now
 app.post('/submit-order', async (req, res) => {
     try {
         console.log('Submitting order...', req.body);
@@ -89,13 +90,11 @@ app.post('/submit-order', async (req, res) => {
             data: {
                 roomNumber: req.body.roomNumber,
                 mobileNumber: req.body.mobileNumber,
-                orderItems: req.body.cart, // Changed from req.body.items to req.body.cart
+                orderItems: req.body.items,
                 total: req.body.total,
                 timestamp: new Date().toISOString()
             }
         };
-
-        console.log('Sending to Apps Script:', orderDataWithSheet);
 
         const response = await axios.post(
             APPS_SCRIPT_URL,
@@ -105,7 +104,7 @@ app.post('/submit-order', async (req, res) => {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                timeout: 15000 // Increased timeout to 15 seconds
+                timeout: 15000 // Increase timeout to 15 seconds
             }
         );
 
@@ -116,16 +115,9 @@ app.post('/submit-order', async (req, res) => {
         console.error('Error submitting order:', error.message);
         if (error.response) {
             console.error('Apps Script error response:', error.response.data);
-            console.error('Status code:', error.response.status);
-        } else if (error.code === 'ECONNABORTED') {
-            console.error('Request timed out');
         }
         res.setHeader('Access-Control-Allow-Origin', '*');
-        res.status(500).json({ 
-            error: 'Failed to submit order',
-            details: error.message,
-            timestamp: new Date().toISOString()
-        });
+        res.status(500).json({ error: 'Failed to submit order: ' + error.message });
     }
 });
 
