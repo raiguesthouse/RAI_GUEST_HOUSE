@@ -15,7 +15,7 @@ app.use(express.json());
 // Proxy for menu fetch (GET request)
 app.get('/menu', async (req, res) => {
     try {
-        const response = await axios.get('https://script.google.com/macros/s/AKfycbyZyq0P0rgI1O9_OjxmDeYQC5WGBO_ORct45NnRDXP7bwFWI9GlN4w4madOOOhB5oqt/exec');
+        const response = await axios.get('https://script.google.com/macros/s/AKfycbyn5D-4VHShkibvWO7npc_vTeDJQAl5McDyAn-py0eXbpab7kl45RtWxKjt_sE2Fy-a/exec');
         res.json(response.data);
     } catch (error) {
         console.error('Error fetching menu:', error.message);
@@ -26,7 +26,7 @@ app.get('/menu', async (req, res) => {
 // Proxy for order submission (POST request)
 app.post('/submit-order', async (req, res) => {
     try {
-        const response = await axios.post('https://script.google.com/macros/s/AKfycbyvjBB-r7TFZEMy9OYirnye9-vhhAoeo6zuMJRw4ZhAjx1WlkdO10WNL1MAV39kXplu/exec', req.body, {
+        const response = await axios.post('https://script.google.com/macros/s/AKfycbwck6jU6UXYv7tRAWxEUNZ5gqYgQDSJCyasIqZBWK8WzuvBjzxbK5cVMVv_j7HHOktG/exec', req.body, {
             headers: {
                 'Content-Type': 'application/json',
             },

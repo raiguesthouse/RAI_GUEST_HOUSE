@@ -5,7 +5,7 @@ const cors = require('cors');
 const app = express();
 
 // Update the Apps Script URL
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyTwDnIN2ekF7eqLXP1lPzhY1bJF5r8iyAAh3JeTrer9CSyTqzR3BtOYUK07sgKJm_C/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVU24aKsvOD6wd2_p70vaNeeF-H4PA9PjT1SQkjgFPKdc0Yl0-8Rt87B4eovgi--eX/exec';
 
 app.use(cors({
     origin: '*',
