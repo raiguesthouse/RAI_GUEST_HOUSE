@@ -36,16 +36,27 @@ app.get('/', (req, res) => {
 app.get('/menu', async (req, res) => {
     try {
         console.log('Fetching menu...');
-        // Fix 1: Update spreadsheet ID and sheet name to match your menu sheet
-        const response = await axios.get(`${https://script.google.com/macros/s/AKfycbxVU24aKsvOD6wd2_p70vaNeeF-H4PA9PjT1SQkjgFPKdc0Yl0-8Rt87B4eovgi--eX/exec}?action=getMenu&spreadsheetId=1dlrMCBndJsgFAQi3c9yf-7Rg_ZMIIFHlo2yCHYGyWGk&sheetName=Menu Items`);
+        const response = await axios.get(`${APPS_SCRIPT_URL}?action=getMenu&spreadsheetId=1dlrMCBndJsgFAQi3c9yf-7Rg_ZMIIFHlo2yCHYGyWGk&sheetName=Menu Items`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+
         console.log('Menu response:', response.data);
+
+        // Check if response is an error
+        if (response.data.status === 'error') {
+            throw new Error(response.data.message);
+        }
+
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.json(response.data);
     } catch (error) {
-        // Fix 2: Improve error logging
         console.error('Error fetching menu:', error.message);
         if (error.response) {
             console.error('Full error response:', error.response.data);
+            console.error('Status code:', error.response.status);
         }
         res.status(500).json({ 
             error: 'Failed to fetch menu',
@@ -55,6 +66,7 @@ app.get('/menu', async (req, res) => {
     }
 });
 
+// Keep the submit-order endpoint as is for now
 app.post('/submit-order', async (req, res) => {
     try {
         console.log('Submitting order...', req.body);
@@ -62,7 +74,6 @@ app.post('/submit-order', async (req, res) => {
             throw new Error('Request body khali hai.');
         }
 
-        // Restructure order data
         const orderDataWithSheet = {
             action: 'submitOrder',
             spreadsheetId: '1RzPVjVA635R8GgjKSsvTLW2tC-FpVB0JdwVpp7ffVys',

@@ -2,7 +2,7 @@ let cart = [];
 let total = 0;
 
 // ✅ Vercel Proxy API
-const API_URL = "https://rai-guest-house-proxy-7txh8o9rp-raiguesthouses-projects.vercel.app/submit-order";
+const API_URL = "https://rai-guest-house-proxy-fvgvi0xgo-raiguesthouses-projects.vercel.app/submit-order";
 
 // 🚨 Show warning on page load
 function showInitialWarning() {
@@ -39,7 +39,7 @@ function showInitialWarning() {
 async function fetchMenu() {
     try {
         showInitialWarning();
-        const response = await fetch('https://rai-guest-house-proxy-7txh8o9rp-raiguesthouses-projects.vercel.app/menu');
+        const response = await fetch('https://rai-guest-house-proxy-fvgvi0xgo-raiguesthouses-projects.vercel.app/menu');
         const menuItems = await response.json();
         displayMenu(menuItems);
     } catch (error) {
