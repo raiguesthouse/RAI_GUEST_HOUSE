@@ -36,17 +36,22 @@ app.get('/', (req, res) => {
 app.get('/menu', async (req, res) => {
     try {
         console.log('Fetching menu...');
-        // Add parameters for menu structure
-        const response = await axios.get(`${APPS_SCRIPT_URL}?action=getMenu&spreadsheetId=1RzPVjVA635R8GgjKSsvTLW2tC-FpVB0JdwVpp7ffVys&sheetName=Menu`);
+        // Fix 1: Update spreadsheet ID and sheet name to match your menu sheet
+        const response = await axios.get(`${https://script.google.com/macros/s/AKfycbxVU24aKsvOD6wd2_p70vaNeeF-H4PA9PjT1SQkjgFPKdc0Yl0-8Rt87B4eovgi--eX/exec}?action=getMenu&spreadsheetId=1dlrMCBndJsgFAQi3c9yf-7Rg_ZMIIFHlo2yCHYGyWGk&sheetName=Menu Items`);
         console.log('Menu response:', response.data);
         res.setHeader('Access-Control-Allow-Origin', '*');
         res.json(response.data);
     } catch (error) {
+        // Fix 2: Improve error logging
         console.error('Error fetching menu:', error.message);
         if (error.response) {
-            console.error('Apps Script error response:', error.response.data);
+            console.error('Full error response:', error.response.data);
         }
-        res.status(500).json({ error: 'Failed to fetch menu: ' + error.message });
+        res.status(500).json({ 
+            error: 'Failed to fetch menu',
+            details: error.message,
+            timestamp: new Date().toISOString()
+        });
     }
 });
 
