@@ -2,8 +2,8 @@ let cart = [];
 let total = 0;
 
 // ✅ Vercel Proxy API
-const API_URL = "https://rai-guest-house-proxy-kkzhkqxan-raiguesthouses-projects.vercel.app/submit-order";
-const MENU_URL = "https://rai-guest-house-proxy-kkzhkqxan-raiguesthouses-projects.vercel.app/menu";
+const API_URL = "https://rai-guest-house-proxy-fvxishcyh-raiguesthouses-projects.vercel.app/submit-order";
+const MENU_URL = "https://rai-guest-house-proxy-fvxishcyh-raiguesthouses-projects.vercel.app/menu";
 
 // 🚨 Show warning on page load
 function showInitialWarning() {
