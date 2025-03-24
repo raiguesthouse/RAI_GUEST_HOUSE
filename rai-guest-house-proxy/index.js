@@ -7,14 +7,18 @@ const app = express();
 // Update the Apps Script URL
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxVU24aKsvOD6wd2_p70vaNeeF-H4PA9PjT1SQkjgFPKdc0Yl0-8Rt87B4eovgi--eX/exec';
 
+// Enable CORS for all origins
 app.use(cors({
     origin: '*',
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type'],
+    exposedHeaders: ['Access-Control-Allow-Origin'],
+    credentials: false
 }));
 
 app.use(express.json());
 
+// Log incoming requests
 app.use((req, res, next) => {
     console.log('Incoming request:', req.method, req.url);
     console.log('Raw request body:', req.body);
@@ -22,10 +26,12 @@ app.use((req, res, next) => {
     next();
 });
 
+// Ensure CORS headers are set for all responses
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
+    res.header('Access-Control-Expose-Headers', 'Access-Control-Allow-Origin');
     next();
 });
 
@@ -40,7 +46,8 @@ app.get('/menu', async (req, res) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
-            }
+            },
+            timeout: 15000 // Increase timeout to 15 seconds
         });
 
         console.log('Menu response:', response.data);
@@ -57,7 +64,10 @@ app.get('/menu', async (req, res) => {
         if (error.response) {
             console.error('Full error response:', error.response.data);
             console.error('Status code:', error.response.status);
+        } else if (error.code === 'ECONNABORTED') {
+            console.error('Request timed out');
         }
+        res.setHeader('Access-Control-Allow-Origin', '*');
         res.status(500).json({ 
             error: 'Failed to fetch menu',
             details: error.message,
@@ -93,7 +103,8 @@ app.post('/submit-order', async (req, res) => {
                 headers: { 
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
-                } 
+                },
+                timeout: 15000 // Increase timeout to 15 seconds
             }
         );
 
@@ -105,6 +116,7 @@ app.post('/submit-order', async (req, res) => {
         if (error.response) {
             console.error('Apps Script error response:', error.response.data);
         }
+        res.setHeader('Access-Control-Allow-Origin', '*');
         res.status(500).json({ error: 'Failed to submit order: ' + error.message });
     }
 });

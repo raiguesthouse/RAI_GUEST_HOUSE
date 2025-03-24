@@ -2,7 +2,8 @@ let cart = [];
 let total = 0;
 
 // ✅ Vercel Proxy API
-const API_URL = "https://rai-guest-house-proxy-fvgvi0xgo-raiguesthouses-projects.vercel.app/submit-order";
+const API_URL = "https://rai-guest-house-proxy-kkzhkqxan-raiguesthouses-projects.vercel.app/submit-order";
+const MENU_URL = "https://rai-guest-house-proxy-kkzhkqxan-raiguesthouses-projects.vercel.app/menu";
 
 // 🚨 Show warning on page load
 function showInitialWarning() {
@@ -39,11 +40,34 @@ function showInitialWarning() {
 async function fetchMenu() {
     try {
         showInitialWarning();
-        const response = await fetch('https://rai-guest-house-proxy-fvgvi0xgo-raiguesthouses-projects.vercel.app/menu');
+        const response = await fetch(MENU_URL, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
         const menuItems = await response.json();
+
+        // Check if response is an error
+        if (menuItems.error) {
+            throw new Error(menuItems.error + (menuItems.details ? `: ${menuItems.details}` : ''));
+        }
+
+        // Ensure menuItems is an array
+        if (!Array.isArray(menuItems)) {
+            throw new Error('Menu items is not an array');
+        }
+
         displayMenu(menuItems);
     } catch (error) {
         console.error('Error fetching menu:', error);
+        alert('Failed to load menu: ' + error.message);
     }
 }
 
