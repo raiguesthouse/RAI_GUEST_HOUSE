@@ -194,6 +194,10 @@ async function submitOrder() {
             body: JSON.stringify(orderData)
         });
 
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
         const result = await response.json();
         console.log('Response body:', result);
 
@@ -203,11 +207,11 @@ async function submitOrder() {
             total = 0;
             updateCart();
         } else {
-            alert('Error placing order: ' + result.message);
+            throw new Error(result.message || 'Unknown error occurred');
         }
     } catch (error) {
         console.error('Error submitting order:', error);
-        alert('Error placing order: ' + error.message);
+        alert('Error placing order: ' + (error.message || 'An unexpected error occurred'));
     }
 }
 

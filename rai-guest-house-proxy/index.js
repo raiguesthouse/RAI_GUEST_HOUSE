@@ -76,7 +76,6 @@ app.get('/menu', async (req, res) => {
     }
 });
 
-// Keep the submit-order endpoint as is for now
 app.post('/submit-order', async (req, res) => {
     try {
         console.log('Submitting order...', req.body);
@@ -90,11 +89,13 @@ app.post('/submit-order', async (req, res) => {
             data: {
                 roomNumber: req.body.roomNumber,
                 mobileNumber: req.body.mobileNumber,
-                orderItems: req.body.items,
+                orderItems: req.body.cart, // Changed from req.body.items to req.body.cart
                 total: req.body.total,
                 timestamp: new Date().toISOString()
             }
         };
+
+        console.log('Sending to Apps Script:', orderDataWithSheet);
 
         const response = await axios.post(
             APPS_SCRIPT_URL,
@@ -104,7 +105,7 @@ app.post('/submit-order', async (req, res) => {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                timeout: 15000 // Increase timeout to 15 seconds
+                timeout: 15000 // Increased timeout to 15 seconds
             }
         );
 
@@ -115,9 +116,16 @@ app.post('/submit-order', async (req, res) => {
         console.error('Error submitting order:', error.message);
         if (error.response) {
             console.error('Apps Script error response:', error.response.data);
+            console.error('Status code:', error.response.status);
+        } else if (error.code === 'ECONNABORTED') {
+            console.error('Request timed out');
         }
         res.setHeader('Access-Control-Allow-Origin', '*');
-        res.status(500).json({ error: 'Failed to submit order: ' + error.message });
+        res.status(500).json({ 
+            error: 'Failed to submit order',
+            details: error.message,
+            timestamp: new Date().toISOString()
+        });
     }
 });
 
